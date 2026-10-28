@@ -373,14 +373,15 @@ var TV = (function () {
   }
 
   // Samsung's own settings screens, opened by app id: the generic "settings" app control took seconds on a 2021
-  // AU8000 and sometimes landed on org.tizen.menu instead. Ids from that TV (Tizen 6, `coba` apps); each list is
-  // tried in order and the first one installed opens. Unlisted TVs fall back to the app control.
+  // AU8000. Each list is tried in order and the first one installed opens, so the order matters: on that TV
+  // (Tizen 6) the `com.samsung.tv.coba.*` apps answer "launched" but never show (checked by eye, screen by screen),
+  // while these do. The coba ones stay last for other models. Unlisted TVs fall back to the app control.
   var SYSTEM_APPS = {
-    settings: ['com.samsung.tv.coba.setting'],
-    network: ['com.samsung.tv.coba.setting.networksettings', 'org.tizen.NetworkSetting-Tizen'],
-    account: ['com.samsung.tv.coba.samsungaccount', 'com.samsung.tv.CSAccount'],
-    privacy: ['com.samsung.tv.coba.privacychoice', 'tv6pbVMQFF.PrivacyChoices'],
-    notifications: ['com.samsung.tv.notification-app']
+    settings: ['org.tizen.menu', 'com.samsung.tv.coba.setting'],   // opens Settings on Picture
+    network: ['org.tizen.NetworkSetting-Tizen', 'com.samsung.tv.coba.setting.networksettings'],
+    account: ['com.samsung.tv.CSAccount', 'com.samsung.tv.coba.samsungaccount'],
+    privacy: ['tv6pbVMQFF.PrivacyChoices', 'com.samsung.tv.coba.privacychoice'],
+    notifications: ['com.samsung.tv.notification-app']   // answers "launched" on the AU8000 but shows nothing
   };
 
   /** Opens the first installed app of a list; done(ok, id), with ok false when none is installed or opens. */

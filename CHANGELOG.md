@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.3.2] - 2026-10-28
+
+### Corrigido
+- **Rede e Wi-Fi, Conta Samsung, Privacidade e Ajustes da TV agora abrem de verdade.** Na 1.3.1 a TV respondia que
+  tinha aberto os apps `com.samsung.tv.coba.*`, mas nada aparecia na tela. Testei tela por tela numa UN60AU8000, com
+  alguém olhando, e estes são os que aparecem:
+  - Rede e Wi-Fi: `org.tizen.NetworkSetting-Tizen`
+  - Conta Samsung: `com.samsung.tv.CSAccount`
+  - Privacidade: `tv6pbVMQFF.PrivacyChoices`
+  - Ajustes da TV: `org.tizen.menu`, que abre as Configurações em Imagem
+  - Os apps `coba` ficam como segunda opção, para outros modelos.
+
+### Problema conhecido
+- **Notificações:** nenhum app testado mostra o painel de notificações na UN60AU8000. O app
+  `com.samsung.tv.notification-app` responde que abriu, mas não aparece nada.
+
 ## [1.3.1] - 2026-10-28
 
 ### Corrigido
