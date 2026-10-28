@@ -76,11 +76,15 @@ body.view-apps #bg .shade, body.view-settings #bg .shade { background: rgba(5, 6
 .tile .dot { position: absolute; right: 14px; top: 14px; width: 14px; height: 14px; border-radius: 7px; background: #8E92A8; }
 .tile .dot.on { background: #34D27B; }
 .tile .star { position: absolute; left: 12px; top: 10px; font-size: 22px; color: #FFD27A; }
+/* The focus ring sits outside the card, on the wallpaper's dark shade, so it shows on white cards (YouTube,
+   Globoplay) as well as dark ones. It wraps the card at its focused size (1.08×). */
+.tile:before { content: ''; position: absolute; left: -16px; right: -16px; top: -13px; height: 166px; border-radius: 30px;
+  border: 4px solid transparent; box-sizing: border-box; }
 .tile.focus .card { transform: scale(1.08); }
-.tile.focus .card:after { border: 5px solid #fff; }
+.tile.focus:before { border-color: #fff; }
 .tile.focus .name { opacity: 1; font-weight: 600; }
 .tile.lifted .card { transform: scale(1.08) translateY(-18px); }
-.tile.lifted .card:after { border: 5px solid #8CB2F3; }
+.tile.lifted:before { border-color: #8CB2F3; transform: translateY(-18px); }
 
 /* MARK: apps and settings */
 #apps, #settings { box-sizing: border-box; padding: 150px 112px 60px; overflow: hidden; }

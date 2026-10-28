@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.4.1] - 2026-10-28
+
+### Corrigido
+- **O contorno do item em foco aparece também nos apps de fundo branco** (YouTube, Globoplay). Ele agora fica do lado
+  de fora do card, sobre o fundo escuro, com uma pequena folga, em vez de ser desenhado por dentro do card. A
+  navegação continua a 60 quadros por segundo na UN60AU8000.
+
+### Mudou
+- O cartão "Ajustes rápidos" virou **"Ajustes de jogo"**, com um ícone de controle de videogame. Na TV, o painel que
+  ele abre mostra controladores, saída de som e imagem de jogo.
+
 ## [1.4.0] - 2026-10-28
 
 ### Novo
