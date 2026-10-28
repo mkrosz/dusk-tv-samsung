@@ -7,7 +7,7 @@
 Paisagens que mudam sozinhas, seus apps com os logos de verdade, relógio, Wi-Fi e notificações. Sem propaganda,
 sem fileiras patrocinadas.
 
-![Versão](https://img.shields.io/badge/versão-1.3.2-8CB2F3?style=for-the-badge)
+![Versão](https://img.shields.io/badge/versão-1.3.3-8CB2F3?style=for-the-badge)
 ![Samsung Tizen](https://img.shields.io/badge/Samsung-Tizen%203.0%2B-1428A0?style=for-the-badge&logo=samsung&logoColor=white)
 ![Testado em](https://img.shields.io/badge/feito%20para-UN60AU8000%20(2021)-0F172A?style=for-the-badge)
 ![Licença MIT](https://img.shields.io/badge/licença-MIT-2EA44F?style=for-the-badge)
@@ -72,13 +72,13 @@ colocar ou tirar dos favoritos (⭐).
 
 ### Ajustes
 Entradas (TV ao vivo e HDMI 1 a 4, com um ponto verde quando há um aparelho ligado), plano de fundo, Rede e
-Wi-Fi, Conta Samsung, Privacidade, Notificações e todos os ajustes da TV.
+Wi-Fi, Conta Samsung, Privacidade, Notificações (em teste) e os Ajustes da TV.
 
 <img src="docs/screenshots/ajustes.png" alt="Aba de ajustes" width="100%">
 
 ### Barra superior
-Logo da Samsung, abas, relógio, força do sinal do **Wi-Fi** (ou o ícone de cabo de rede) e o **sino**, que abre
-o painel de notificações da Samsung.
+Logo da Samsung, abas, relógio, força do sinal do **Wi-Fi** (ou o ícone de cabo de rede) e o **sino** de
+notificações. Por enquanto, o sino abre os Ajustes da TV (veja [Notificações: em investigação](#-notificações-em-investigação)).
 
 <img src="docs/screenshots/topo.png" alt="Barra superior com relógio, Wi-Fi e notificações" width="100%">
 
@@ -94,7 +94,8 @@ o painel de notificações da Samsung.
 - ⭐ **Favoritos editáveis pelo controle:** adicionar, tirar e reorganizar. Na aba Apps, eles ficam numa seção separada.
 - 🛍️ **Loja de apps** da Samsung a um clique, na aba Apps.
 - 📶 **Status da rede** em tempo real: força do Wi-Fi ou cabo.
-- 🔔 **Notificações** da Samsung a um clique.
+- 🔔 **Sino de notificações:** por enquanto abre os Ajustes da TV. O painel de notificações da Samsung ainda está
+  [em investigação](#-notificações-em-investigação).
 - 🔌 **Entradas HDMI** com status de conexão.
 - ⚙️ **Identidade visual** num só arquivo: logo, cor de destaque, tipo de fundo e favoritos iniciais.
 - 🪶 **Leve e rápido:** JavaScript puro, sem frameworks, sem sombras e sem blur. Os favoritos aparecem em cerca de 0,5 s, e a navegação roda a 60 quadros por segundo, medido numa UN60AU8000.
@@ -251,9 +252,20 @@ dusk-tv-samsung/
 
 ## ⚠️ Limites do Tizen
 
-- **Notificações, Rede, Conta e Privacidade:** a Samsung não documenta os apps dessas telas. O Dusk abre direto
-  os que existem na UN60AU8000 (Tizen 6). Em outros modelos, se algum não existir, ele abre os Ajustes da TV e
-  mostra o caminho a seguir lá dentro.
+- **Rede, Conta e Privacidade:** a Samsung não documenta os apps dessas telas. O Dusk abre direto os que funcionam
+  na UN60AU8000 (Tizen 6). Em outros modelos, se algum não existir, ele abre os Ajustes da TV e mostra o caminho a
+  seguir lá dentro.
+
+### 🔔 Notificações: em investigação
+
+**Abrir o painel de notificações da Samsung ainda não funcionou.** Na UN60AU8000 testamos 10 jeitos diferentes, com
+alguém olhando a TV: os apps `com.samsung.tv.notification-app`, `com.samsung.tv.notification-serviceapp` e
+`com.samsung.tv.coba.home-notification`, chamados direto, por *app control* e em sequência. A TV responde que abriu,
+mas nada aparece. É um app interno da Samsung, que não aceita os pedidos padrão de um app de terceiros.
+
+Enquanto isso, o sino e o cartão "Notificações" abrem os **Ajustes da TV**. Seguimos procurando uma solução. Se você
+souber como abrir esse painel no Tizen, ou se funcionar no seu modelo, abra uma [issue](../../issues) ou um Pull
+Request.
 - **Botão Home:** continua abrindo o Smart Hub. Por segurança, ele não é remapeado.
 - **Modo Desenvolvedor:** precisa continuar ligado para o app funcionar.
 

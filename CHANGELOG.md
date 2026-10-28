@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.3.3] - 2026-10-28
+
+### Mudou
+- **O sino e o cartão "Notificações" abrem os Ajustes da TV.** Numa terceira rodada de testes na UN60AU8000, com
+  alguém olhando a tela, nenhum dos cinco novos jeitos mostrou o painel de notificações da Samsung. Foram o serviço
+  de notificações, o serviço seguido do app, o componente da tela inicial por *app control*, o painel rápido e a
+  tela inicial. Ao todo, 10 tentativas nas três rodadas.
+- O README ganhou a seção "Notificações: em investigação", que explica o que foi testado e convida quem souber o
+  caminho a contribuir.
+
 ## [1.3.2] - 2026-10-28
 
 ### Corrigido

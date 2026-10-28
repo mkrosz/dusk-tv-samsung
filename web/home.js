@@ -246,12 +246,11 @@
     });
   }
 
+  // No app found yet shows Samsung's notification panel on the AU8000: three rounds of tests by eye, every
+  // candidate answered "launched" and showed nothing (see CHANGELOG 1.3.3). Until one does, the bell opens Settings.
+  // TV.notifications keeps the search for when a working id turns up.
   function openNotifications() {
-    toast('Abrindo notificações…');
-    TV.notifications(function (ok, how) {
-      if (how === 'settings') toast('Painel de notificações não encontrado nesta TV: abrindo os Ajustes');
-      else if (!ok) toast('Não deu para abrir as notificações');
-    });
+    openTvSettings('', 'os Ajustes da TV', '');
   }
 
   // MARK: - Tiles
@@ -425,7 +424,7 @@
         function () { openTvSettings('account', 'Conta Samsung', 'Geral → Gerenciador do sistema → Conta Samsung'); }));
     system.appendChild(card(SVG.privacy, 'Privacidade', 'Termos, privacidade e anúncios',
         function () { openTvSettings('privacy', 'Privacidade', 'Geral → Termos e Privacidade'); }));
-    system.appendChild(card(SVG.bellcard, 'Notificações', 'Painel de notificações da Samsung', openNotifications));
+    system.appendChild(card(SVG.bellcard, 'Notificações', 'Em teste: por enquanto abre os Ajustes da TV', openNotifications));
     system.appendChild(card(SVG.gear, 'Ajustes da TV', 'Imagem, som, suporte e tudo mais',
         function () { openTvSettings('', 'os Ajustes da TV', ''); }));
 
