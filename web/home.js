@@ -51,8 +51,13 @@
     gear: '<svg viewBox="0 0 48 48"><path d="M27.6 4l1.2 5.2a15 15 0 0 1 3.9 2.3l5.1-1.6 3.6 6.2-3.9 3.6a15 15 0 0 1 0 4.6l3.9 3.6-3.6 6.2-5.1-1.6a15 15 0 0 1-3.9 2.3L27.6 44h-7.2l-1.2-5.2a15 15 0 0 1-3.9-2.3l-5.1 1.6-3.6-6.2 3.9-3.6a15 15 0 0 1 0-4.6l-3.9-3.6 3.6-6.2 5.1 1.6a15 15 0 0 1 3.9-2.3L20.4 4zM24 17a7 7 0 1 0 0 14 7 7 0 0 0 0-14z" fill="#fff"/></svg>',
     bellcard: '<svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>' +
       '<path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-    next: '<svg viewBox="0 0 48 48"><path d="M8 10l18 14L8 38zm20 0l18 14-18 14z" fill="#fff"/></svg>'
+    next: '<svg viewBox="0 0 48 48"><path d="M8 10l18 14L8 38zm20 0l18 14-18 14z" fill="#fff"/></svg>',
+    store: '<svg class="glyph" viewBox="0 0 48 48"><path d="M10 16h28l-2.2 24.3A4 4 0 0 1 31.8 44H16.2a4 4 0 0 1-4-3.7z" fill="none" stroke="#fff" stroke-width="3.2" stroke-linejoin="round"/>' +
+      '<path d="M17 20v-6a7 7 0 0 1 14 0v6M24 25v11M18.5 30.5h11" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/></svg>'
   };
+
+  // Samsung's app store ("Apps" in Smart Hub): its own tile in the Apps tab, not one of the apps.
+  var STORE_ID = 'com.samsung.tv.store', STORE_TILE = 'dusk:store';
 
   // The apps' own logos (web/logos), by the app's name: [name, file, tile color, shape]. These win over the TV's
   // icons, which are small tiles with their own frames. Shape: '' a symbol, 'wide' a wordmark drawn at its own
@@ -324,10 +329,37 @@
     }
   }
 
+  // Apps: the favorites first, in their order, then the store and every other app.
   function drawApps() {
+    var top = $('#apps .grid.favapps');
+    top.innerHTML = '';
+    favs.forEach(function (id, i) {
+      var item = byId(id);
+      if (item) top.appendChild(tile(item, i, {star: true}));
+    });
+    if (!top.children.length) {
+      var empty = document.createElement('div');
+      empty.className = 'empty';
+      empty.textContent = 'Nenhum favorito ainda. Segure OK num app abaixo para fixá-lo aqui e no Início.';
+      top.appendChild(empty);
+    }
     var grid = $('#apps .grid.apps');
     grid.innerHTML = '';
-    apps.forEach(function (a, i) { grid.appendChild(tile(a, i, {star: true})); });
+    grid.appendChild(storeTile());
+    apps.forEach(function (a, i) {
+      if (favs.indexOf(a.id) < 0 && a.id !== STORE_ID) grid.appendChild(tile(a, i));
+    });
+  }
+
+  function storeTile() {
+    var el = tile({id: STORE_TILE, title: 'Loja de apps', icon: '', color: '#1428A0'}, 0);
+    var face = $('.card', el);
+    face.innerHTML = SVG.store;
+    el.onAction = function () {
+      toast('Abrindo a loja de apps…');
+      TV.launch(STORE_ID, null, function (ok) { if (!ok) toast('Não deu para abrir a loja de apps'); });
+    };
+    return el;
   }
 
   function card(icon, title, sub, action) {
@@ -576,6 +608,7 @@
   function longPress(el) {
     if (!el || !el.getAttribute('data-id')) return;
     var id = el.getAttribute('data-id');
+    if (id.indexOf('dusk:') === 0) return;   // the store tile isn't an app to pin
     if (view === 'home') {
       moving = el;
       el.classList.add('lifted');

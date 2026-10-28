@@ -7,7 +7,7 @@
 Paisagens que mudam sozinhas, seus apps com os logos de verdade, relógio, Wi-Fi e notificações. Sem propaganda,
 sem fileiras patrocinadas.
 
-![Versão](https://img.shields.io/badge/versão-1.2.1-8CB2F3?style=for-the-badge)
+![Versão](https://img.shields.io/badge/versão-1.3.0-8CB2F3?style=for-the-badge)
 ![Samsung Tizen](https://img.shields.io/badge/Samsung-Tizen%203.0%2B-1428A0?style=for-the-badge&logo=samsung&logoColor=white)
 ![Testado em](https://img.shields.io/badge/feito%20para-UN60AU8000%20(2021)-0F172A?style=for-the-badge)
 ![Licença MIT](https://img.shields.io/badge/licença-MIT-2EA44F?style=for-the-badge)
@@ -64,8 +64,9 @@ Segure **OK** num favorito para arrastá-lo com as setas.
 <img src="docs/screenshots/inicio.png" alt="Tela inicial" width="100%">
 
 ### Apps
-Todos os apps instalados, cada um com o **logo oficial** sobre a cor da marca.
-Segure **OK** para colocar ou tirar dos favoritos (⭐).
+Seus **Favoritos** ficam numa seção própria no topo, e logo abaixo vêm **Todos os apps**, com um bloco para abrir a
+**Loja de apps** da Samsung. Cada app aparece com o **logo oficial** sobre a cor da marca. Segure **OK** para
+colocar ou tirar dos favoritos (⭐).
 
 <img src="docs/screenshots/apps.png" alt="Aba de apps" width="100%">
 
@@ -90,7 +91,8 @@ o painel de notificações da Samsung.
 - 📴 **Funciona sem internet:** 5 paisagens salvas no próprio app entram quando a rede cai.
 - 🎨 **Logos de verdade** para cerca de 30 apps: Netflix, YouTube, Prime Video, Globoplay, Disney+, HBO Max,
   Apple TV, Spotify, Twitch, Crunchyroll, Plex, Paramount+, PlayStation, Xbox e outros.
-- ⭐ **Favoritos editáveis pelo controle:** adicionar, tirar e reorganizar.
+- ⭐ **Favoritos editáveis pelo controle:** adicionar, tirar e reorganizar. Na aba Apps, eles ficam numa seção separada.
+- 🛍️ **Loja de apps** da Samsung a um clique, na aba Apps.
 - 📶 **Status da rede** em tempo real: força do Wi-Fi ou cabo.
 - 🔔 **Notificações** da Samsung a um clique.
 - 🔌 **Entradas HDMI** com status de conexão.

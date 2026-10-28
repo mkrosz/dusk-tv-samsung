@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.0] - 2026-10-28
+
+### Novo
+- **Favoritos separados na aba Apps:** os apps marcados com ⭐ ficam numa seção "Favoritos" no topo, na mesma ordem
+  do Início. Os demais ficam em "Todos os apps".
+- **Bloco "Loja de apps":** primeiro bloco de "Todos os apps", abre a loja da Samsung (`com.samsung.tv.store`). O
+  app "Apps" da Samsung sai da lista, para não aparecer repetido.
+
 ## [1.2.1] - 2026-10-28
 
 ### Corrigido
