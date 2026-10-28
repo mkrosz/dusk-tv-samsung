@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.7.0] - 2026-10-28
+
+### Novo
+- **Menu ao segurar OK na aba Apps**, com **Favoritar** (ou **Tirar dos favoritos**) e **Abrir**. Antes, segurar OK
+  já favoritava ou tirava o app, e às vezes ele acabava abrindo logo em seguida. Agora nada muda sem você escolher:
+  ▲ ▼ trocam de opção, OK confirma, e Voltar (ou ◀ ▶) fecha.
+  - O menu abre embaixo do app, com o visual da barra Início/Apps/Ajustes: fundo translúcido, opções em pílula e a
+    opção em foco branca com borda azul.
+  - Os outros apps escurecem enquanto ele está aberto, deixando em destaque o app escolhido.
+- Não há "Desinstalar": a Samsung não deixa um app desinstalar outro. A TV recusou instalar o Dusk com a permissão
+  `packagemanager.install`, que exige um certificado de nível *platform*. Abrir a página do app na loja também não
+  funcionou: a loja abre só na tela inicial.
+
 ## [1.6.1] - 2026-10-28
 
 ### Visual

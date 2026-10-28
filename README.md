@@ -7,7 +7,7 @@
 Paisagens que mudam sozinhas, seus apps com os logos de verdade, relógio, Wi-Fi e notificações. Sem propaganda,
 sem fileiras patrocinadas.
 
-![Versão](https://img.shields.io/badge/versão-1.6.1-8CB2F3?style=for-the-badge)
+![Versão](https://img.shields.io/badge/versão-1.7.0-8CB2F3?style=for-the-badge)
 ![Samsung Tizen](https://img.shields.io/badge/Samsung-Tizen%203.0%2B-1428A0?style=for-the-badge&logo=samsung&logoColor=white)
 ![Testado em](https://img.shields.io/badge/feito%20para-UN60AU8000%20(2021)-0F172A?style=for-the-badge)
 ![Licença MIT](https://img.shields.io/badge/licença-MIT-2EA44F?style=for-the-badge)
@@ -65,8 +65,9 @@ Segure **OK** num favorito para arrastá-lo com as setas.
 
 ### Apps
 Seus **Favoritos** ficam numa seção própria no topo, e logo abaixo vêm **Todos os apps**, com um bloco para abrir a
-**Loja de apps** da Samsung. Cada app aparece com o **logo oficial** sobre a cor da marca. Segure **OK** para
-colocar ou tirar dos favoritos (⭐).
+**Loja de apps** da Samsung. Cada app aparece com o **logo oficial** sobre a cor da marca. Segure **OK** num app
+para abrir um menu com **Favoritar** (ou **Tirar dos favoritos**) e **Abrir**. Os outros apps escurecem enquanto ele
+está aberto.
 
 <img src="docs/screenshots/apps.png" alt="Aba de apps" width="100%">
 

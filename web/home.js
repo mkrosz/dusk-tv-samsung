@@ -125,7 +125,8 @@
 
   function applyAccent() {
     var css = '.tab.focus,#bell.focus,.cards .item.focus{border-color:' + ACCENT + '}' +
-      '.tile.lifted:before{border-color:' + ACCENT + '}#favs.moving .hint{color:' + ACCENT + '}';
+      '.tile.lifted:before{border-color:' + ACCENT + '}#favs.moving .hint{color:' + ACCENT + '}' +
+      '.menu .opt.focus{border-color:' + ACCENT + '}';
     var tag = document.createElement('style');
     tag.textContent = css;
     document.head.appendChild(tag);
@@ -621,6 +622,10 @@
     if (el.onAction) { el.onAction(); return; }
     var id = el.getAttribute('data-id');
     if (!id) return;
+    openApp(id);
+  }
+
+  function openApp(id) {
     var item = byId(id);
     TV.launch(id, null, function (ok) { if (!ok) toast('Não deu para abrir ' + (item ? item.title : 'o app')); });
   }
@@ -635,15 +640,64 @@
       $('#favs').classList.add('moving');
       $('#favs .hint').textContent = '◀ ▶ para mover · OK para soltar';
     } else if (view === 'apps') {
-      var i = favs.indexOf(id), item = byId(id);
-      if (i >= 0) { favs.splice(i, 1); toast((item ? item.title : 'App') + ' saiu dos favoritos'); }
-      else { favs.push(id); toast((item ? item.title : 'App') + ' entrou nos favoritos'); }
-      save(KEY_FAVS, favs);
-      drawFavs();
-      drawApps();
-      var again = $('#apps [data-id="' + id + '"]');
-      if (again) focus(again);
+      openMenu(el);
     }
+  }
+
+  // MARK: - App menu
+
+  // Holding OK on an app in the Apps tab asks first: the options open just below its card, so a held OK never pins (or
+  // unpins) an app by itself, and the release that follows never opens it. Samsung lets no app uninstall another,
+  // so there's no Uninstall here.
+  var menu = null;   // {tile, el}
+
+  function menuButton(label, action) {
+    var b = document.createElement('button');
+    b.className = 'opt';
+    b.setAttribute('data-f', '');
+    b.textContent = label;
+    b.onAction = action;
+    return b;
+  }
+
+  function openMenu(tileEl) {
+    var id = tileEl.getAttribute('data-id'), pinned = favs.indexOf(id) >= 0;
+    var el = document.createElement('div');
+    el.className = 'menu';
+    el.appendChild(menuButton(pinned ? 'Tirar dos favoritos' : 'Favoritar', function () {
+      closeMenu();
+      toggleFav(id);
+    }));
+    el.appendChild(menuButton('Abrir', function () {
+      closeMenu();
+      openApp(id);
+    }));
+    tileEl.appendChild(el);
+    tileEl.classList.add('asking');
+    $('#apps').classList.add('asking');
+    menu = {tile: tileEl, el: el};
+    focus(el.firstChild);
+  }
+
+  function closeMenu() {
+    if (!menu) return;
+    var t = menu.tile;
+    t.classList.remove('asking');
+    $('#apps').classList.remove('asking');
+    if (menu.el.parentNode) menu.el.parentNode.removeChild(menu.el);
+    menu = null;
+    focus(document.body.contains(t) ? t : $('#apps [data-f]'));
+  }
+
+  function toggleFav(id) {
+    var i = favs.indexOf(id), item = byId(id);
+    if (i >= 0) { favs.splice(i, 1); toast((item ? item.title : 'App') + ' saiu dos favoritos'); }
+    else { favs.push(id); toast((item ? item.title : 'App') + ' entrou nos favoritos'); }
+    save(KEY_FAVS, favs);
+    drawFavs();
+    drawApps();
+    var again = $('#apps [data-id="' + id + '"]');
+    if (again) focus(again);
   }
 
   function dropMoving() {
@@ -690,6 +744,16 @@
         okLong = true;
         if (!moving) longPress(focused);
       }, LONG_PRESS);
+      return;
+    }
+    // The app menu: ▲ ▼ between its two options, Back (or ◀ ▶) closes it. A redraw of the Apps tab may have taken it.
+    if (menu && !document.body.contains(menu.el)) { menu = null; $('#apps').classList.remove('asking'); }
+    if (menu) {
+      var opts = $$('.opt', menu.el), at = opts.indexOf(focused);
+      if (k === keys.up && at > 0) focus(opts[at - 1]);
+      else if (k === keys.down && at < opts.length - 1) focus(opts[at + 1]);
+      else if (k === keys.back || k === 27 || k === 8 || k === keys.left || k === keys.right) closeMenu();
+      e.preventDefault();
       return;
     }
     if (moving) {

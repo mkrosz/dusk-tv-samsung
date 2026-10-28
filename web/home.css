@@ -88,6 +88,20 @@ body.view-apps #bg .shade, body.view-settings #bg .shade { background: rgba(5, 6
 .tile.focus .name { opacity: 1; font-weight: 600; }
 .tile.lifted .card { transform: scale(1.08) translateY(-18px); }
 .tile.lifted:before { border-color: #8CB2F3; transform: translateY(-18px); }
+/* The app menu (hold OK in Apps): two options below the card and its name, drawn like the tabs (the same translucent
+   pill bar, the focused option white with the accent border). It grows with its words and centers under the card.
+   Everything else in the tab dims, so the app being changed stands out. */
+#apps.asking h2, #apps.asking .hint, #apps.asking .tile { opacity: 0.25; }
+#apps.asking .tile.asking { opacity: 1; }
+.tile.asking { z-index: 3; }
+.tile.asking .card { transform: scale(1.08); }
+.tile.asking:before { border-color: #fff; }
+.tile .menu { position: absolute; left: 50%; top: 196px; min-width: 100%; transform: translateX(-50%); box-sizing: border-box;
+  padding: 6px; border-radius: 30px; background: rgba(255, 255, 255, 0.16); border: 1px solid rgba(255, 255, 255, 0.18); }
+.menu .opt { display: block; width: 100%; height: 48px; padding: 0 26px; box-sizing: border-box; border: 3px solid transparent;
+  border-radius: 24px; font-size: 22px; font-weight: 500; color: rgba(255, 255, 255, 0.82); white-space: nowrap; }
+.menu .opt + .opt { margin-top: 4px; }
+.menu .opt.focus { background: #fff; color: #14162A; border-color: #8CB2F3; }
 
 /* MARK: apps and settings */
 #apps, #settings { box-sizing: border-box; padding: 150px 112px 60px; overflow: hidden; }
