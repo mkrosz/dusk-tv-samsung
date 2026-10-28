@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.8.1] - 2026-10-28
+
+### Visual
+- **Reorganizar favoritos no Início destaca o app movido**, como o menu de Apps: ao apertar ▼ ou segurar OK, os
+  outros favoritos e o título "Favoritos" escurecem até você soltar.
+
+### Corrigido
+- **A fileira de favoritos acompanha o app sendo movido.** Com muitos favoritos, levar o último até o começo fazia
+  ele sumir da tela, porque a fileira só rolava quando o foco andava, e não quando um app era movido.
+
 ## [1.8.0] - 2026-10-28
 
 ### Novo

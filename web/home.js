@@ -845,6 +845,7 @@
     var row = moving.parentNode;
     if (dir < 0 && moving.previousElementSibling) row.insertBefore(moving, moving.previousElementSibling);
     else if (dir > 0 && moving.nextElementSibling) row.insertBefore(moving.nextElementSibling, moving);
+    scrollTo(moving);   // the row follows the favorite in your hands
   }
 
   var toastTimer = null;
