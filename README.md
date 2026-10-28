@@ -136,7 +136,10 @@ Os passos 1 a 3 são feitos uma vez só.
    janela não abre.
    - No Smart Remote (o controle sem números), aperte o botão **123** para abrir o teclado numérico na tela antes.
 3. Ligue o **Developer mode**.
-4. Em **Host PC IP**, coloque o IP do seu computador (no Windows, rode `ipconfig` e use o "Endereço IPv4").
+4. Em **Host PC IP**, coloque o IP do seu computador. No Windows, rode `ipconfig` e use o "Endereço IPv4" do
+   adaptador **Wi-Fi** ou **Ethernet**, que é o que tem "Gateway Padrão" preenchido (algo como `192.168.0.x`).
+   Ignore IPs que começam com `169.254` e adaptadores de VPN (Tailscale, Hamachi etc.): a TV não alcança esses
+   endereços.
 5. Desligue e ligue a TV: segure o botão de ligar até ela reiniciar.
 6. Anote o IP da TV, que aparece em Configurações → Geral → Rede → Status da rede → Configurações de IP. Ele é
    usado no passo 4, no comando `install.py`.
@@ -167,17 +170,12 @@ com o caminho. Também é preciso ter o [Python 3](https://www.python.org/downlo
      Package Manager do SDK, e de login na conta Samsung.
 3. Dê o nome `dusk` ao perfil e crie um certificado de autor novo, com uma senha só sua.
 
-<details>
-<summary>Prefere só linha de comando? (Tizen)</summary>
+**Atalho para TVs até 2022 (Windows):** em vez do Certificate Manager, rode o script abaixo. Ele pede uma senha e
+cria o certificado e o perfil `dusk` sozinho.
 
 ```bash
-tizen certificate -a dusk -p SUA_SENHA -f dusk
-tizen security-profiles add -n dusk -a C:\tizen-studio-data\keystore\author\dusk.p12 -p SUA_SENHA
+powershell -ExecutionPolicy Bypass -File tools\criar-certificado.ps1
 ```
-
-O `tizen` fica em `C:\tizen-studio\tools\ide\bin\`.
-
-</details>
 
 **4. Gere e instale o app**
 
