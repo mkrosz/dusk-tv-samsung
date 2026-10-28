@@ -383,11 +383,14 @@
     system.appendChild(card(SVG.bellcard, 'Notificações', 'Painel de notificações da Samsung', openNotifications));
     system.appendChild(card(SVG.gear, 'Todos os ajustes da TV', 'Imagem, som, suporte e mais', function () { openTvSettings(''); }));
 
+    if (aboutText) { $('#settings .about').textContent = aboutText; return; }
     TV.about(function (a) {
       var parts = [a.model, a.system, a.firmware, a.ip ? 'IP ' + a.ip : '', a.version ? 'Dusk TV ' + a.version : ''];
-      $('#settings .about').textContent = parts.filter(function (p) { return p; }).join('  ·  ');
+      aboutText = parts.filter(function (p) { return p; }).join('  ·  ');
+      $('#settings .about').textContent = aboutText;
     });
   }
+  var aboutText = '';
 
   function drawAll() {
     drawFavs();
@@ -412,12 +415,24 @@
   // drawn at once; the TV's answers redraw them when they arrive, and a slow source list never holds the apps.
   var KEY_APPS = 'dusk.apps', KEY_INPUTS = 'dusk.inputs';
 
+  // On the AU8000 building every tab took ~0.4 s before anything showed: the favorites are drawn first, and the Apps
+  // and Settings tabs a moment later (at once when one of them is on screen).
+  var restTimer = null;
+
   function redraw(done) {
     if (!favs && apps.length) { favs = defaultFavs(); save(KEY_FAVS, favs); }
     if (!favs) favs = [];
     var keep = focused && focused.getAttribute('data-id');
     if (moving) return;   // never pull the row from under a favorite being moved
-    drawAll();
+    drawFavs();
+    mark('dusk-drawn');
+    clearTimeout(restTimer);
+    if (view === 'home') {
+      restTimer = setTimeout(function () { drawApps(); drawSettings(); }, 600);
+    } else {
+      drawApps();
+      drawSettings();
+    }
     var again = keep && $('#' + view + ' [data-id="' + keep + '"]');
     if (again) focus(again);
     if (done) done();
@@ -654,7 +669,13 @@
     });
   }
 
+  // Startup timings, read on the TV through its inspector (performance.getEntriesByType('mark')).
+  function mark(name) {
+    try { if (!performance.getEntriesByName(name).length) performance.mark(name); } catch (e) {}
+  }
+
   function start() {
+    mark('dusk-start');
     fit();
     window.addEventListener('resize', fit);
     applyAccent();
@@ -670,15 +691,23 @@
     }
     $('#bell').innerHTML = SVG.bell;
     wrapScrollers();
+    tick();
+    // The first frame shows Início as it is, without the tab's fade.
+    document.documentElement.className += ' instant';
+    show('home');
     // A saved photo shows at once; an online one replaces it as soon as the list arrives.
     showWall(SAVED[wallIndex % SAVED.length]);
-    rotate();
-    setInterval(rotate, Math.max(1, CONF.rotateMinutes || 20) * 60000);
-    tick();
     setInterval(tick, 10000);
-    refreshNet();
-    setInterval(refreshNet, 15000);
-    show('home');
+    // What isn't on the first screen waits until the favorites are up.
+    setTimeout(function () {
+      document.documentElement.className = document.documentElement.className.replace(' instant', '');
+      refreshNet();
+      setInterval(refreshNet, 15000);
+    }, 400);
+    setTimeout(function () {
+      rotate();
+      setInterval(rotate, Math.max(1, CONF.rotateMinutes || 20) * 60000);
+    }, 1500);
     document.addEventListener('keydown', onKey);
     document.addEventListener('keyup', onKeyUp);
     // Mouse in a desktop browser (the preview): click opens, hover moves the focus.
@@ -688,6 +717,7 @@
     });
     // index.html#apps or #settings opens on that tab (handy for previews and screenshots).
     var first = (location.hash || '').slice(1);
+    if (first === 'apps' || first === 'settings') view = first;
     refresh(function () {
       if (first === 'apps' || first === 'settings') { show(first); focus($('#' + first + ' [data-f]')); }
       else focus($('#favs .tile') || $('.tab'));

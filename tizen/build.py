@@ -54,15 +54,35 @@ def sign(profile):
         sys.exit('O pacote voltou sem as assinaturas.')
 
 
+def inlined_index():
+    """index.html with home.css and the scripts written inside it: on the AU8000 each file the page loads took
+    100-300 ms before the first screen, so the package carries one page."""
+    def read(name):
+        with open(os.path.join(WEB, name), encoding='utf-8-sig') as f:
+            return f.read()
+    html = read('index.html')
+    html = html.replace('<link rel="stylesheet" href="home.css">', '<style>\n%s\n</style>' % read('home.css'))
+    for name in re.findall(r'<script src="([^"]+)"></script>', html):
+        code = read(name)
+        if '</script' in code:
+            sys.exit('%s contains "</script", which would end the inlined script early.' % name)
+        html = html.replace('<script src="%s"></script>' % name, '<script>\n%s\n</script>' % code)
+    return html.encode('utf-8')
+
+
 def build(profile):
     with open(os.path.join(ROOT, 'tizen', 'config.xml'), encoding='utf-8') as f:
         manifest = f.read()
     version = re.search(r'<widget [^>]*version="([^"]+)"', manifest).group(1)
     with zipfile.ZipFile(WGT, 'w', zipfile.ZIP_DEFLATED) as z:
+        bundled = ('index.html', 'home.css', 'config.js', 'tv.js', 'home.js')
+        z.writestr('index.html', inlined_index())
         for folder, _, names in os.walk(WEB):
             for name in sorted(names):
                 path = os.path.join(folder, name)
-                z.write(path, os.path.relpath(path, WEB).replace(os.sep, '/'))
+                rel = os.path.relpath(path, WEB).replace(os.sep, '/')
+                if rel not in bundled:
+                    z.write(path, rel)
         z.write(os.path.join(ROOT, 'tizen', 'config.xml'), 'config.xml')
         z.write(os.path.join(ROOT, 'tizen', 'icon.png'), 'icon.png')
     if profile:

@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.1.0] - 2026-10-28
+
+### Mais rápido
+- Os favoritos aparecem em cerca de 0,5 s depois de abrir o app. Antes levavam 1,7 s numa UN60AU8000.
+  - A última lista de apps e entradas fica guardada e é mostrada na hora, enquanto a TV responde.
+  - Os favoritos são desenhados primeiro, e as abas Apps e Ajustes logo depois.
+  - O pacote leva uma página só, com o CSS e os scripts dentro dela (`tizen/build.py`).
+  - A fonte Inter foi reduzida aos caracteres usados: de 860 KB para 120 KB (`tools/subset_font.py`).
+
+### Corrigido
+- Segurar OK num favorito agora entra no modo de reorganizar. Antes, soltar o botão abria o app, porque o controle
+  da Samsung não repete o OK enquanto ele está apertado.
+- ▼ num favorito também entra no modo de reorganizar.
+
+### Instalação
+- Link do Tizen SDK 10. O link antigo do Tizen Studio leva para a página inicial do samsungtizenos.com.
+- Script `tools/criar-certificado.ps1`, que cria o certificado e o perfil `dusk` sem abrir o Certificate Manager.
+- README explica:
+  - que o `1 2 3 4 5` precisa ser digitado em até 2 segundos;
+  - qual IP usar (Wi-Fi ou Ethernet, nunca VPN ou `169.254.x.x`);
+  - onde entra o IP da TV;
+  - que o "Executar automaticamente último app" é configurado na TV.
+- `build.py` também procura o SDK em `C:\tizen-sdk`.
+
 ## [1.0.0] - 2026-10-28
 
 Primeira versão pública.

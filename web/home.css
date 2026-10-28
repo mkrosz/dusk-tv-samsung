@@ -1,5 +1,8 @@
-/* Dusk TV: a 1920×1080 stage, scaled to the screen. No blur filters: the AU8000's GPU keeps 60 fps without them. */
-@font-face { font-family: 'Inter'; src: url('Inter.ttf'); font-weight: 100 900; }
+﻿/* Dusk TV: a 1920×1080 stage, scaled to the screen. No blur filters: the AU8000's GPU keeps 60 fps without them. */
+/* Inter cut down to the Latin letters and symbols the screen uses (tools/subset_font.py); swap draws text at once
+   in the TV's font while it loads. */
+@font-face { font-family: 'Inter'; src: url('Inter.woff') format('woff'); font-weight: 100 900; font-display: swap; }
+.instant .view, .instant .tile .card { transition: none !important; }
 
 html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #0B0D1A; }
 body { font-family: 'Inter', 'Samsung One', sans-serif; color: #fff; -webkit-font-smoothing: antialiased; }

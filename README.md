@@ -1,4 +1,4 @@
-<div align="center">
+﻿<div align="center">
 
 # 🌅 Dusk TV
 
@@ -7,7 +7,7 @@
 Paisagens que mudam sozinhas, seus apps com os logos de verdade, relógio, Wi-Fi e notificações. Sem propaganda,
 sem fileiras patrocinadas.
 
-![Versão](https://img.shields.io/badge/versão-1.0.0-FF8A3D?style=for-the-badge)
+![Versão](https://img.shields.io/badge/versão-1.1.0-FF8A3D?style=for-the-badge)
 ![Samsung Tizen](https://img.shields.io/badge/Samsung-Tizen%203.0%2B-1428A0?style=for-the-badge&logo=samsung&logoColor=white)
 ![Testado em](https://img.shields.io/badge/feito%20para-UN60AU8000%20(2021)-0F172A?style=for-the-badge)
 ![Licença MIT](https://img.shields.io/badge/licença-MIT-2EA44F?style=for-the-badge)
@@ -95,7 +95,7 @@ o painel de notificações da Samsung.
 - 🔔 **Notificações** da Samsung a um clique.
 - 🔌 **Entradas HDMI** com status de conexão.
 - ⚙️ **Identidade visual** num só arquivo: logo, cor de destaque, tipo de fundo e favoritos iniciais.
-- 🪶 **Leve:** JavaScript puro, sem frameworks e sem efeitos de blur, para manter 60 fps em TVs mais simples.
+- 🪶 **Leve e rápido:** JavaScript puro, sem frameworks e sem blur. Os favoritos aparecem em cerca de 0,5 s, e a navegação fica em 60 fps mesmo em TVs mais simples.
 - ↩️ **Reversível:** não mexe no sistema da TV, no botão Home nem no Smart Hub.
 
 ---
