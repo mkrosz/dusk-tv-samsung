@@ -189,9 +189,14 @@ python tizen/install.py IP_DA_TV
 Troque `IP_DA_TV` pelo IP que você anotou no passo 1 (por exemplo, `python tizen/install.py 192.168.0.20`). O
 app abre sozinho na TV no fim do último comando.
 
-**5. Para a TV já ligar no Dusk TV**
+**5. Na TV, faça ela já ligar no Dusk TV**
 
-Vá em Configurações → Geral → Recursos Smart e ligue **Executar automaticamente o último app** (Autorun Last App).
+Este passo é feito **na TV, com o controle** (não no Tizen Studio):
+
+1. Aperte **Home**, vá até a engrenagem **⚙ Configurações** e entre em **Todas as configurações**.
+2. Entre em **Geral** → **Recursos Smart**.
+3. Ligue **Executar automaticamente último app** (*Autorun Last App*).
+4. Abra o Dusk TV uma vez e desligue a TV com ele aberto. Da próxima vez, ela liga direto nele.
 
 > Mudou alguma coisa? Rode de novo só o passo 4.
 
