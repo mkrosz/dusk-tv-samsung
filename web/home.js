@@ -56,6 +56,8 @@
     // A game controller (after Lucide's "gamepad-2", ISC), for Samsung's game panel.
     gamepad: '<svg viewBox="0 0 24 24"><path d="M6 11h4M8 9v4M15 12h.01M18 10h.01" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/>' +
       '<path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    // The favorite badge's star (after Lucide's "star", ISC).
+    star: '<svg viewBox="0 0 24 24"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" fill="#FFD27A"/></svg>',
     next: '<svg viewBox="0 0 48 48"><path d="M8 10l18 14L8 38zm20 0l18 14-18 14z" fill="#fff"/></svg>',
     store: '<svg class="glyph" viewBox="0 0 48 48"><path d="M10 16h28l-2.2 24.3A4 4 0 0 1 31.8 44H16.2a4 4 0 0 1-4-3.7z" fill="none" stroke="#fff" stroke-width="3.2" stroke-linejoin="round"/>' +
       '<path d="M17 20v-6a7 7 0 0 1 14 0v6M24 25v11M18.5 30.5h11" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/></svg>'
@@ -289,7 +291,7 @@
     if (opts && opts.star && favs.indexOf(item.id) >= 0) {
       var star = document.createElement('span');
       star.className = 'star';
-      star.textContent = '★';
+      star.innerHTML = SVG.star;
       card.appendChild(star);
     }
     var name = document.createElement('div');

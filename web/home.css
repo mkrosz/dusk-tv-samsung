@@ -75,7 +75,10 @@ body.view-apps #bg .shade, body.view-settings #bg .shade { background: rgba(5, 6
 .tile .name { margin-top: 16px; font-size: 19px; font-weight: 500; opacity: 0.88; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tile .dot { position: absolute; right: 14px; top: 14px; width: 14px; height: 14px; border-radius: 7px; background: #8E92A8; }
 .tile .dot.on { background: #34D27B; }
-.tile .star { position: absolute; left: 12px; top: 10px; font-size: 22px; color: #FFD27A; }
+/* The favorite badge: a small yellow star on a translucent dark circle, like the bell; it reads on white and dark cards. */
+.tile .star { position: absolute; left: 12px; top: 12px; width: 34px; height: 34px; box-sizing: border-box; padding: 8px;
+  border-radius: 17px; background: rgba(12, 14, 30, 0.6); }
+.tile .star svg { width: 100%; height: 100%; display: block; }
 /* The focus ring sits outside the card, on the wallpaper's dark shade, so it shows on white cards (YouTube,
    Globoplay) as well as dark ones. It wraps the card at its focused size (1.08×). */
 .tile:before { content: ''; position: absolute; left: -16px; right: -16px; top: -13px; height: 166px; border-radius: 30px;

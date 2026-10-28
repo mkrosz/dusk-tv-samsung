@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.6.1] - 2026-10-28
+
+### Visual
+- **Nova estrela dos favoritos** na aba Apps: uma estrela amarela num pequeno círculo escuro translúcido, no estilo do
+  botão do sino. Antes era um ★ de texto, que sumia nos cartões brancos (YouTube, Globoplay).
+
 ## [1.6.0] - 2026-10-28
 
 ### Removido
