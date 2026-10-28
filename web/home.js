@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Dusk TV: the home screen. Three tabs (Início, Apps, Ajustes), a clock, the network and Samsung's notifications,
  * moved with the remote's arrows. Plain ES5, like tv.js.
  */
@@ -408,26 +408,46 @@
     return out;
   }
 
+  // The TV takes a while to list its apps and sources (seconds on a 2021 AU8000), so the last lists are kept and
+  // drawn at once; the TV's answers redraw them when they arrive, and a slow source list never holds the apps.
+  var KEY_APPS = 'dusk.apps', KEY_INPUTS = 'dusk.inputs';
+
+  function redraw(done) {
+    if (!favs && apps.length) { favs = defaultFavs(); save(KEY_FAVS, favs); }
+    if (!favs) favs = [];
+    var keep = focused && focused.getAttribute('data-id');
+    if (moving) return;   // never pull the row from under a favorite being moved
+    drawAll();
+    var again = keep && $('#' + view + ' [data-id="' + keep + '"]');
+    if (again) focus(again);
+    if (done) done();
+  }
+
   function refresh(done) {
-    var left = 2;
-    function finish() {
-      if (--left > 0) return;
-      if (!favs) { favs = defaultFavs(); save(KEY_FAVS, favs); }
-      var keep = focused && focused.getAttribute('data-id');
-      drawAll();
-      if (keep) {
-        var again = $('#' + view + ' [data-id="' + keep + '"]');
-        if (again) focus(again);
-      }
-      if (done) done();
+    var cachedApps = load(KEY_APPS, null), cachedInputs = load(KEY_INPUTS, null), sent = false;
+    if (cachedApps) {
+      apps = cachedApps;
+      inputs = cachedInputs || [];
+      redraw(done);
+      sent = true;
     }
-    TV.apps(function (list) { apps = list || []; finish(); });
+    function once() { if (!sent) { sent = true; redraw(done); } else redraw(); }
+    TV.apps(function (list) {
+      list = list || [];
+      if (JSON.stringify(list) === JSON.stringify(apps) && sent) return;
+      apps = list;
+      save(KEY_APPS, apps);
+      once();
+    });
     TV.inputs(function (list) {
-      inputs = (list || []).map(function (x) {
+      list = (list || []).map(function (x) {
         return {id: x.id, title: x.label || 'TV ao vivo', icon: '', color: x.key === 'live' ? '#2E3150' : '#3A3550',
           connected: x.connected, input: true, live: x.key === 'live'};
       });
-      finish();
+      if (JSON.stringify(list) === JSON.stringify(inputs)) return;
+      inputs = list;
+      save(KEY_INPUTS, inputs);
+      if (sent) redraw();
     });
   }
 
@@ -542,7 +562,7 @@
     if (!moving) return;
     moving.classList.remove('lifted');
     $('#favs').classList.remove('moving');
-    $('#favs .hint').textContent = 'Segure OK para reorganizar';
+    $('#favs .hint').textContent = 'Segure OK ou aperte ▼ para reorganizar';
     favs = $$('#favs .row .tile').map(function (t) { return t.getAttribute('data-id'); });
     save(KEY_FAVS, favs);
     moving = null;
@@ -565,12 +585,23 @@
 
   // MARK: - Remote
 
+  // A held OK is timed from its first keydown: Samsung's remotes don't repeat OK while it's held, so waiting for a
+  // second keydown never fires. If OK is still down when the timer ends, it's a long press, and its keyup is ignored.
+  var okTimer = null;
+
   function onKey(e) {
     var k = e.keyCode, keys = TV.keys;
     if (k === keys.ok) {
       e.preventDefault();
-      if (!okDown) { okDown = Date.now(); okLong = false; }
-      else if (!okLong && Date.now() - okDown > LONG_PRESS) { okLong = true; if (!moving) longPress(focused); }
+      if (okDown) return;   // a repeat of the same press
+      okDown = Date.now();
+      okLong = false;
+      clearTimeout(okTimer);
+      okTimer = setTimeout(function () {
+        if (!okDown) return;
+        okLong = true;
+        if (!moving) longPress(focused);
+      }, LONG_PRESS);
       return;
     }
     if (moving) {
@@ -578,6 +609,12 @@
       else if (k === keys.right) shiftMoving(1);
       else if (k === keys.back || k === 27 || k === keys.up || k === keys.down) dropMoving();
       e.preventDefault();
+      return;
+    }
+    // Down on a favorite (there's nothing below the row) also starts moving it.
+    if (k === keys.down && view === 'home' && focused && focused.parentNode && focused.parentNode.classList.contains('row')) {
+      e.preventDefault();
+      longPress(focused);
       return;
     }
     if (k === keys.left) move(-1, 0);
@@ -598,6 +635,7 @@
     if (e.keyCode !== TV.keys.ok) return;
     e.preventDefault();
     var wasLong = okLong;
+    clearTimeout(okTimer);
     okDown = 0;
     okLong = false;
     if (wasLong) return;
