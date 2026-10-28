@@ -16,7 +16,7 @@ sem fileiras patrocinadas.
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
 ![Python 3](https://img.shields.io/badge/Python-3-3776AB?style=flat-square&logo=python&logoColor=white)
-![Tizen Studio](https://img.shields.io/badge/Tizen%20Studio-CLI-6C4AB6?style=flat-square)
+![Tizen SDK](https://img.shields.io/badge/Tizen%20SDK-10-6C4AB6?style=flat-square)
 ![Feito com Claude Code](https://img.shields.io/badge/feito%20com-Claude%20Code-D97757?style=flat-square&logo=claude&logoColor=white)
 
 <img src="docs/screenshots/inicio.png" alt="Tela inicial do Dusk TV" width="100%">
@@ -120,7 +120,7 @@ o painel de notificações da Samsung.
 | Interface | HTML5, CSS3 e JavaScript **ES5** (o navegador das TVs Tizen é antigo), fonte [Inter](https://rsms.me/inter/) |
 | Integração com a TV | APIs web do Tizen: `tizen.application` (apps), `tizen.systeminfo` (Wi-Fi e rede), `tizen.tvwindow` (HDMI) |
 | Paisagens online | Arquivo de imagens do dia do Bing (`HPImageArchive`), sem chave |
-| Empacotamento | Python 3 (`tizen/build.py`) e o `tizen package` do Tizen Studio para assinar |
+| Empacotamento | Python 3 (`tizen/build.py`) e o `tizen package` do Tizen SDK 10 (antigo Tizen Studio) para assinar |
 | Instalação | Python 3 (`tizen/install.py`), que fala o protocolo SDB da TV direto, sem precisar do `sdb` |
 | Base | Camada de TV do [Free My TV](https://github.com/simbasjungles/free-my-tv) (MIT) |
 
@@ -137,15 +137,40 @@ Os passos 1 a 3 são feitos uma vez só.
 4. Desligue e ligue a TV.
 5. Anote o IP da TV: Configurações → Geral → Rede → Status da rede.
 
-**2. No computador, instale o Tizen Studio**
+**2. No computador, instale o Tizen SDK**
 
-Baixe em <https://developer.tizen.org/development/tizen-studio/download> e instale em `C:\tizen-studio`. Também é
-preciso ter o [Python 3](https://www.python.org/downloads/).
+O Tizen Studio agora se chama **Tizen SDK** e fica na página de [Tools do Samsung Tizen OS](https://samsungtizenos.com/tools-download/).
+No Windows, baixe a versão com interface gráfica, que já traz o Certificate Manager:
+
+- **Windows (64-bit):** [web-ide_Tizen_SDK_10.0_windows-64.exe](https://download.tizen.org/sdk/Installer/tizen-sdk_10.0/web-ide_Tizen_SDK_10.0_windows-64.exe)
+- **Outros sistemas e espelhos:** [download.tizen.org/sdk/Installer/tizen-sdk_10.0](https://download.tizen.org/sdk/Installer/tizen-sdk_10.0/)
+
+Instale na pasta sugerida (`C:\tizen-studio`). Se escolher outra, defina a variável de ambiente `TIZEN_STUDIO`
+com o caminho. Também é preciso ter o [Python 3](https://www.python.org/downloads/).
+
+> Se o Windows bloquear o instalador, clique em "Mais informações" e depois em "Executar assim mesmo". O instalador
+> precisa do Java, e oferece para instalar se não encontrar.
 
 **3. Crie o certificado**
 
-Abra o **Certificate Manager** do Tizen Studio, clique em **+**, escolha **Tizen** (TVs até 2022) ou **Samsung**
-(TVs de 2023 em diante), dê o nome `dusk` e crie um certificado de autor com uma senha só sua.
+1. Abra o **Certificate Manager**: no menu Iniciar, ou em `C:\tizen-studio\tools\certificate-manager\`.
+2. Clique em **+** e escolha o tipo:
+   - **Tizen:** TVs de 2015 a 2022, como a UN60AU8000.
+   - **Samsung:** TVs de 2023 em diante. Precisa da extensão *Samsung Certificate Extension*, instalada pelo
+     Package Manager do SDK, e de login na conta Samsung.
+3. Dê o nome `dusk` ao perfil e crie um certificado de autor novo, com uma senha só sua.
+
+<details>
+<summary>Prefere só linha de comando? (Tizen)</summary>
+
+```bash
+tizen certificate -a dusk -p SUA_SENHA -f dusk
+tizen security-profiles add -n dusk -a C:\tizen-studio-data\keystore\author\dusk.p12 -p SUA_SENHA
+```
+
+O `tizen` fica em `C:\tizen-studio\tools\ide\bin\`.
+
+</details>
 
 **4. Gere e instale o app**
 

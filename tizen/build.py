@@ -25,7 +25,8 @@ def tizen_cli():
     """O comando `tizen` do Tizen Studio, ou None."""
     name = 'tizen.bat' if os.name == 'nt' else 'tizen'
     home = os.path.expanduser('~')
-    for base in (os.environ.get('TIZEN_STUDIO', ''), os.path.join(home, 'tizen-studio'), 'C:\\tizen-studio'):
+    for base in (os.environ.get('TIZEN_STUDIO', ''), os.path.join(home, 'tizen-studio'), 'C:\\tizen-studio',
+                 os.path.join(home, 'tizen-sdk'), 'C:\\tizen-sdk'):
         path = os.path.join(base, 'tools', 'ide', 'bin', name)
         if base and os.path.exists(path):
             return path
@@ -35,7 +36,8 @@ def tizen_cli():
 def sign(profile):
     cli = tizen_cli()
     if not cli:
-        sys.exit('Para assinar é preciso o Tizen Studio. Não achei: instale-o em C:\\tizen-studio ou defina TIZEN_STUDIO.')
+        sys.exit('Para assinar é preciso o Tizen SDK (antigo Tizen Studio). Não achei: instale-o em C:\\tizen-studio '
+                 '(https://samsungtizenos.com/tools-download/) ou defina TIZEN_STUDIO com a pasta onde ele está.')
     out = tempfile.mkdtemp()
     try:
         run = subprocess.run([cli, 'package', '-t', 'wgt', '-s', profile, '-o', out, '--', WGT],
