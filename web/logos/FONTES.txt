@@ -1,0 +1,8 @@
+Logos dos apps (as marcas são dos seus donos; uso pessoal na própria TV)
+- Simple Icons 13.0.0 (CC0), https://simpleicons.org: samsung, netflix, youtube, youtubekids, youtubemusic, primevideo,
+  hbo, appletv, spotify, twitch, crunchyroll, plex, paramountplus, smartthings, tubi, mubi, dazn, jellyfin, steam,
+  playstation, nvidia, discord, tiktok, kick, pinterest, starz. Recoloridos para os cards.
+- Disney+: https://commons.wikimedia.org/wiki/File:Disney%2B_logo.svg (via o fork free-my-tv-tizen, PD-textlogo).
+- HBO Max: https://commons.wikimedia.org/wiki/File:HBO_Max_(2025).svg (via o fork free-my-tv-tizen, PD-textlogo).
+- Globoplay: https://commons.wikimedia.org/wiki/File:Globoplay_logo.svg
+- Xbox: https://commons.wikimedia.org/wiki/File:Xbox_one_logo.svg (recolorido em branco).

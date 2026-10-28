@@ -1,0 +1,4 @@
+As 5 paisagens desta pasta são desenhadas por código (tools/make_wallpapers.py) e seguem a licença MIT do projeto.
+Use as suas fotos se quiser: troque estes arquivos por imagens de 1920x1080 com os mesmos nomes.
+
+Com internet, o Dusk TV mostra as imagens do dia do Bing, carregadas direto do Bing (não ficam guardadas aqui).

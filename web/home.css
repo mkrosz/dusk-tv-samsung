@@ -1,0 +1,107 @@
+/* Dusk TV: a 1920×1080 stage, scaled to the screen. No blur filters: the AU8000's GPU keeps 60 fps without them. */
+@font-face { font-family: 'Inter'; src: url('Inter.ttf'); font-weight: 100 900; }
+
+html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #0B0D1A; }
+body { font-family: 'Inter', 'Samsung One', sans-serif; color: #fff; -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; outline: none; cursor: pointer; }
+
+#stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; overflow: hidden; }
+
+/* MARK: wallpaper */
+#bg, #bg img, #bg .shade { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+#bg img { object-fit: cover; opacity: 0; transition: opacity 900ms ease; }
+#bg img.on { opacity: 1; }
+#bg .shade {
+  /* Photos vary a lot: the left side and the bottom always get enough shade for white text. */
+  background: linear-gradient(180deg, rgba(5, 6, 18, 0.5) 0%, rgba(5, 6, 18, 0.1) 22%, rgba(5, 6, 18, 0.15) 50%, rgba(5, 6, 18, 0.78) 100%),
+    linear-gradient(90deg, rgba(5, 6, 18, 0.45) 0%, rgba(5, 6, 18, 0) 55%);
+  transition: background 400ms ease;
+}
+body.view-apps #bg .shade, body.view-settings #bg .shade { background: rgba(5, 6, 18, 0.66); }
+
+/* MARK: top bar */
+#top { position: absolute; left: 96px; right: 96px; top: 48px; height: 64px; display: flex; align-items: center; z-index: 5; }
+#brand { flex: 1; display: flex; align-items: center; font-size: 34px; font-weight: 700; letter-spacing: -0.5px; }
+#brand img { height: 30px; width: auto; filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.35)); }
+
+#tabs { display: flex; padding: 6px; border-radius: 40px; background: rgba(255, 255, 255, 0.16); border: 1px solid rgba(255, 255, 255, 0.18); }
+.tab { height: 48px; padding: 0 30px; border-radius: 24px; font-size: 22px; font-weight: 500; color: rgba(255, 255, 255, 0.82);
+  transition: background 160ms ease, color 160ms ease, transform 160ms ease; }
+.tab.current { background: rgba(255, 255, 255, 0.92); color: #14162A; }
+.tab.focus { background: #fff; color: #14162A; transform: scale(1.06); box-shadow: 0 0 0 3px #FF8A3D; }
+
+#status { flex: 1; display: flex; align-items: center; justify-content: flex-end; }
+#clock { font-size: 28px; font-weight: 600; font-variant-numeric: tabular-nums; margin-right: 26px; }
+#net { width: 34px; height: 34px; margin-right: 22px; opacity: 0.95; }
+#net svg, #bell svg { width: 100%; height: 100%; display: block; }
+#bell { width: 56px; height: 56px; padding: 12px; box-sizing: border-box; border-radius: 28px; background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.18); transition: transform 160ms ease, background 160ms ease; }
+#bell.focus { background: #fff; transform: scale(1.12); box-shadow: 0 0 0 3px #FF8A3D; }
+#bell.focus svg * { stroke: #14162A; }
+
+/* MARK: views */
+.view { position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0; visibility: hidden;
+  transition: opacity 260ms ease, transform 260ms ease; transform: translateY(14px); }
+.view.on { opacity: 1; visibility: visible; transform: none; }
+
+#hello { position: absolute; left: 112px; top: 318px; text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35); }
+#hello .greet { font-size: 18px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; opacity: 0.9; }
+#hello h1 { margin: 14px 0 18px; font-size: 92px; font-weight: 700; letter-spacing: -2px; line-height: 1; }
+#hello .date { font-size: 28px; font-weight: 500; opacity: 0.92; }
+
+#favs { position: absolute; left: 112px; right: 112px; bottom: 96px; }
+#favs .label { font-size: 22px; font-weight: 600; margin-bottom: 18px; }
+#favs .hint { position: absolute; right: 0; top: 4px; font-size: 16px; opacity: 0.75; }
+#favs .row { display: flex; height: 240px; align-items: flex-start; position: relative; transition: transform 240ms ease; }
+#favs.moving .hint { color: #FFB27F; opacity: 1; }
+
+/* MARK: tiles */
+.tile { position: relative; flex: none; width: 236px; margin-right: 36px; text-align: center; }
+.tile .card { position: relative; height: 140px; border-radius: 22px; overflow: hidden; display: flex; align-items: center; justify-content: center;
+  background: #2A2D44; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35); transition: transform 180ms ease, box-shadow 180ms ease; }
+.tile .card img { max-width: 70%; max-height: 62%; }
+.tile .card img.logo { width: auto; height: 64px; max-width: 72%; max-height: 64px; }
+.tile .card img.logo.wide { height: auto; width: 66%; max-width: 66%; max-height: 80px; }
+.tile .card img.logo.mark { width: 64%; height: 150px; max-width: 64%; max-height: 150px; object-fit: contain; }
+.tile .card img.fill { max-width: none; max-height: none; width: 100%; height: 100%; object-fit: cover; }
+.tile .card .word { font-size: 34px; font-weight: 700; letter-spacing: -0.5px; padding: 0 14px; line-height: 1.05; }
+.tile .card .glyph { width: 64px; height: 64px; }
+.tile .name { margin-top: 16px; font-size: 19px; font-weight: 500; opacity: 0.88; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tile .dot { position: absolute; right: 14px; top: 14px; width: 14px; height: 14px; border-radius: 7px; background: #8E92A8; }
+.tile .dot.on { background: #34D27B; box-shadow: 0 0 12px rgba(52, 210, 123, 0.8); }
+.tile .star { position: absolute; left: 12px; top: 10px; font-size: 22px; color: #FFD27A; }
+.tile.focus .card { transform: scale(1.1); box-shadow: 0 0 0 4px #fff, 0 18px 46px rgba(0, 0, 0, 0.55); }
+.tile.focus .name { opacity: 1; font-weight: 600; }
+.tile.lifted .card { transform: scale(1.1) translateY(-18px); box-shadow: 0 0 0 4px #FF8A3D, 0 26px 50px rgba(0, 0, 0, 0.6); }
+
+/* MARK: apps and settings */
+#apps, #settings { box-sizing: border-box; padding: 150px 112px 60px; overflow: hidden; }
+.view .scroller { transition: transform 260ms ease; }
+.view h2 { font-size: 26px; font-weight: 600; margin: 34px 0 22px; }
+.view h2:first-child { margin-top: 20px; }
+.grid { display: flex; flex-wrap: wrap; }
+.grid .tile { margin-bottom: 30px; }
+.grid.apps .tile { margin-right: 40px; }
+#apps .hint { font-size: 16px; opacity: 0.7; margin-top: 6px; }
+
+.cards .item { width: 392px; height: 132px; margin: 0 28px 28px 0; padding: 24px 28px; box-sizing: border-box; border-radius: 22px; text-align: left;
+  background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.14); display: flex; align-items: center;
+  transition: transform 160ms ease, background 160ms ease; }
+.cards .item .icon { flex: none; width: 52px; height: 52px; margin-right: 22px; }
+.cards .item .icon svg { width: 100%; height: 100%; }
+.cards .item .t { font-size: 24px; font-weight: 600; }
+.cards .item .s { font-size: 16px; opacity: 0.72; margin-top: 6px; line-height: 1.3; }
+.cards .item.focus { background: #fff; color: #14162A; transform: scale(1.05); box-shadow: 0 0 0 3px #FF8A3D; }
+.cards .item.focus .icon path, .cards .item.focus .icon circle, .cards .item.focus .icon rect { fill: #14162A; }
+.cards .item.focus .icon [stroke] { stroke: #14162A; fill: none; }
+#settings .about { font-size: 16px; opacity: 0.6; margin-top: 10px; }
+
+#credit { position: absolute; right: 112px; bottom: 34px; max-width: 900px; font-size: 15px; opacity: 0.7; text-align: right;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6); transition: opacity 400ms ease; }
+body.view-apps #credit, body.view-settings #credit { opacity: 0; }
+
+/* MARK: toast */
+#toast { position: absolute; left: 50%; bottom: 56px; transform: translate(-50%, 30px); padding: 18px 30px; border-radius: 30px; font-size: 22px;
+  background: rgba(16, 18, 34, 0.92); border: 1px solid rgba(255, 255, 255, 0.16); opacity: 0; transition: opacity 220ms ease, transform 220ms ease;
+  white-space: nowrap; z-index: 9; }
+#toast.on { opacity: 1; transform: translate(-50%, 0); }

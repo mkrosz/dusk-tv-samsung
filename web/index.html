@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>Dusk TV</title>
+<link rel="stylesheet" href="home.css">
+</head>
+<body>
+<div id="stage">
+  <div id="bg"><img id="wallA" alt=""><img id="wallB" alt=""><div class="shade"></div></div>
+
+  <header id="top">
+    <div id="brand"></div>
+    <nav id="tabs">
+      <button class="tab" data-f data-view="home">Início</button>
+      <button class="tab" data-f data-view="apps">Apps</button>
+      <button class="tab" data-f data-view="settings">Ajustes</button>
+    </nav>
+    <div id="status">
+      <span id="clock"></span>
+      <span id="net" title="Rede"></span>
+      <button id="bell" data-f aria-label="Notificações"></button>
+    </div>
+  </header>
+
+  <section id="home" class="view">
+    <div id="hello">
+      <div class="greet"></div>
+      <h1>Bem-vindo de volta</h1>
+      <div class="date"></div>
+    </div>
+    <div id="favs">
+      <div class="label">Favoritos</div>
+      <div class="hint">Segure OK para reorganizar</div>
+      <div class="row"></div>
+    </div>
+  </section>
+
+  <section id="apps" class="view">
+    <h2>Seus apps</h2>
+    <div class="grid apps"></div>
+    <h2>Entradas</h2>
+    <div class="grid inputs"></div>
+    <div class="hint">Segure OK para adicionar ou tirar dos favoritos</div>
+  </section>
+
+  <section id="settings" class="view">
+    <h2>Entradas</h2>
+    <div class="grid inputs"></div>
+    <h2>Personalizar</h2>
+    <div class="grid cards personal"></div>
+    <h2>Sistema da TV</h2>
+    <div class="grid cards system"></div>
+    <div class="about"></div>
+  </section>
+
+  <div id="credit"></div>
+  <div id="toast"></div>
+</div>
+<script src="config.js"></script>
+<script src="tv.js"></script>
+<script src="home.js"></script>
+</body>
+</html>
