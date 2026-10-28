@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.2.0] - 2026-10-28
+
+### Navegação fluida
+- A navegação entre favoritos, Apps e Ajustes roda a **60 quadros por segundo**. Antes rodava a 8 na UN60AU8000.
+  A medição foi feita na TV.
+  - Sem sombras: o contorno do item em foco agora é uma borda.
+  - O foco e a troca de aba são instantâneos, sem animação de zoom, fade ou deslize. Só o papel de parede e os
+    avisos continuam com transição suave.
+
+### Visual
+- Cor de destaque **azul pastel `#8CB2F3`**, no lugar do laranja: abas, sino, cartões dos Ajustes e o favorito sendo
+  movido.
+
+### Mudou
+- As **Entradas** (TV ao vivo e HDMI) saíram da aba Apps e ficam só em Ajustes.
+
 ## [1.1.0] - 2026-10-28
 
 ### Mais rápido

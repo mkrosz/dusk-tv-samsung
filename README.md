@@ -7,7 +7,7 @@
 Paisagens que mudam sozinhas, seus apps com os logos de verdade, relógio, Wi-Fi e notificações. Sem propaganda,
 sem fileiras patrocinadas.
 
-![Versão](https://img.shields.io/badge/versão-1.1.0-FF8A3D?style=for-the-badge)
+![Versão](https://img.shields.io/badge/versão-1.2.0-8CB2F3?style=for-the-badge)
 ![Samsung Tizen](https://img.shields.io/badge/Samsung-Tizen%203.0%2B-1428A0?style=for-the-badge&logo=samsung&logoColor=white)
 ![Testado em](https://img.shields.io/badge/feito%20para-UN60AU8000%20(2021)-0F172A?style=for-the-badge)
 ![Licença MIT](https://img.shields.io/badge/licença-MIT-2EA44F?style=for-the-badge)
@@ -64,7 +64,7 @@ Segure **OK** num favorito para arrastá-lo com as setas.
 <img src="docs/screenshots/inicio.png" alt="Tela inicial" width="100%">
 
 ### Apps
-Todos os apps instalados e as entradas da TV, cada um com o **logo oficial** sobre a cor da marca.
+Todos os apps instalados, cada um com o **logo oficial** sobre a cor da marca.
 Segure **OK** para colocar ou tirar dos favoritos (⭐).
 
 <img src="docs/screenshots/apps.png" alt="Aba de apps" width="100%">
@@ -95,7 +95,7 @@ o painel de notificações da Samsung.
 - 🔔 **Notificações** da Samsung a um clique.
 - 🔌 **Entradas HDMI** com status de conexão.
 - ⚙️ **Identidade visual** num só arquivo: logo, cor de destaque, tipo de fundo e favoritos iniciais.
-- 🪶 **Leve e rápido:** JavaScript puro, sem frameworks e sem blur. Os favoritos aparecem em cerca de 0,5 s, e a navegação fica em 60 fps mesmo em TVs mais simples.
+- 🪶 **Leve e rápido:** JavaScript puro, sem frameworks, sem sombras e sem blur. Os favoritos aparecem em cerca de 0,5 s, e a navegação roda a 60 quadros por segundo, medido numa UN60AU8000.
 - ↩️ **Reversível:** não mexe no sistema da TV, no botão Home nem no Smart Hub.
 
 ---
@@ -210,7 +210,7 @@ Toda a identidade visual fica em [`web/config.js`](web/config.js):
 window.DUSK = {
   logo: 'logos/samsung.svg',   // logo do canto (ou '' para mostrar o texto de `brand`)
   brand: 'Samsung',
-  accent: '#FF8A3D',           // cor do item em foco
+  accent: '#8CB2F3',           // cor de destaque (azul pastel)
   wallpaper: 'online',         // 'online' (paisagens da internet) ou 'salvas'
   rotateMinutes: 20,           // de quantos em quantos minutos a paisagem troca
   favorites: ['Netflix', 'YouTube', 'Prime Video', 'Globoplay', 'Disney+', 'Max', 'Apple TV', 'Spotify']

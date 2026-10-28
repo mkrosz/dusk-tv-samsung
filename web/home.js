@@ -6,7 +6,7 @@
   'use strict';
 
   var CONF = window.DUSK || {};
-  var ACCENT = CONF.accent || '#FF8A3D';
+  var ACCENT = CONF.accent || '#8CB2F3';
   var KEY_FAVS = 'dusk.favs', KEY_WALL = 'dusk.wall';
   var LONG_PRESS = 600;
 
@@ -109,8 +109,8 @@
   }
 
   function applyAccent() {
-    var css = '.tab.focus,#bell.focus,.cards .item.focus{box-shadow:0 0 0 3px ' + ACCENT + '}' +
-      '.tile.lifted .card{box-shadow:0 0 0 4px ' + ACCENT + ',0 26px 50px rgba(0,0,0,.6)}';
+    var css = '.tab.focus,#bell.focus,.cards .item.focus{border-color:' + ACCENT + '}' +
+      '.tile.lifted .card:after{border-color:' + ACCENT + '}#favs.moving .hint{color:' + ACCENT + '}';
     var tag = document.createElement('style');
     tag.textContent = css;
     document.head.appendChild(tag);
@@ -325,9 +325,6 @@
     var grid = $('#apps .grid.apps');
     grid.innerHTML = '';
     apps.forEach(function (a, i) { grid.appendChild(tile(a, i, {star: true})); });
-    var ins = $('#apps .grid.inputs');
-    ins.innerHTML = '';
-    inputs.forEach(function (x, i) { ins.appendChild(tile(x, i, {star: true})); });
   }
 
   function card(icon, title, sub, action) {
@@ -692,15 +689,12 @@
     $('#bell').innerHTML = SVG.bell;
     wrapScrollers();
     tick();
-    // The first frame shows Início as it is, without the tab's fade.
-    document.documentElement.className += ' instant';
     show('home');
     // A saved photo shows at once; an online one replaces it as soon as the list arrives.
     showWall(SAVED[wallIndex % SAVED.length]);
     setInterval(tick, 10000);
     // What isn't on the first screen waits until the favorites are up.
     setTimeout(function () {
-      document.documentElement.className = document.documentElement.className.replace(' instant', '');
       refreshNet();
       setInterval(refreshNet, 15000);
     }, 400);

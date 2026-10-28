@@ -1,8 +1,10 @@
-﻿/* Dusk TV: a 1920×1080 stage, scaled to the screen. No blur filters: the AU8000's GPU keeps 60 fps without them. */
+﻿/* Dusk TV: a 1920×1080 stage, scaled to the screen.
+   Measured on a 2021 AU8000 (Tizen 6): box shadows and animated focus (scale, fades, sliding rows) dropped
+   navigation to 8 fps; without them it holds 60. So focus changes are instant, rings are borders, not shadows,
+   and only the wallpaper and the toast fade. */
 /* Inter cut down to the Latin letters and symbols the screen uses (tools/subset_font.py); swap draws text at once
    in the TV's font while it loads. */
 @font-face { font-family: 'Inter'; src: url('Inter.woff') format('woff'); font-weight: 100 900; font-display: swap; }
-.instant .view, .instant .tile .card { transition: none !important; }
 
 html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #0B0D1A; }
 body { font-family: 'Inter', 'Samsung One', sans-serif; color: #fff; -webkit-font-smoothing: antialiased; }
@@ -18,34 +20,32 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   /* Photos vary a lot: the left side and the bottom always get enough shade for white text. */
   background: linear-gradient(180deg, rgba(5, 6, 18, 0.5) 0%, rgba(5, 6, 18, 0.1) 22%, rgba(5, 6, 18, 0.15) 50%, rgba(5, 6, 18, 0.78) 100%),
     linear-gradient(90deg, rgba(5, 6, 18, 0.45) 0%, rgba(5, 6, 18, 0) 55%);
-  transition: background 400ms ease;
 }
 body.view-apps #bg .shade, body.view-settings #bg .shade { background: rgba(5, 6, 18, 0.66); }
 
 /* MARK: top bar */
 #top { position: absolute; left: 96px; right: 96px; top: 48px; height: 64px; display: flex; align-items: center; z-index: 5; }
 #brand { flex: 1; display: flex; align-items: center; font-size: 34px; font-weight: 700; letter-spacing: -0.5px; }
-#brand img { height: 30px; width: auto; filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.35)); }
+#brand img { height: 30px; width: auto; }
 
 #tabs { display: flex; padding: 6px; border-radius: 40px; background: rgba(255, 255, 255, 0.16); border: 1px solid rgba(255, 255, 255, 0.18); }
-.tab { height: 48px; padding: 0 30px; border-radius: 24px; font-size: 22px; font-weight: 500; color: rgba(255, 255, 255, 0.82);
-  transition: background 160ms ease, color 160ms ease, transform 160ms ease; }
+.tab { height: 48px; padding: 0 28px; box-sizing: border-box; border: 3px solid transparent; border-radius: 24px; font-size: 22px;
+  font-weight: 500; color: rgba(255, 255, 255, 0.82); }
 .tab.current { background: rgba(255, 255, 255, 0.92); color: #14162A; }
-.tab.focus { background: #fff; color: #14162A; transform: scale(1.06); box-shadow: 0 0 0 3px #FF8A3D; }
+.tab.focus { background: #fff; color: #14162A; border-color: #8CB2F3; }
 
 #status { flex: 1; display: flex; align-items: center; justify-content: flex-end; }
 #clock { font-size: 28px; font-weight: 600; font-variant-numeric: tabular-nums; margin-right: 26px; }
 #net { width: 34px; height: 34px; margin-right: 22px; opacity: 0.95; }
 #net svg, #bell svg { width: 100%; height: 100%; display: block; }
-#bell { width: 56px; height: 56px; padding: 12px; box-sizing: border-box; border-radius: 28px; background: rgba(255, 255, 255, 0.16);
-  border: 1px solid rgba(255, 255, 255, 0.18); transition: transform 160ms ease, background 160ms ease; }
-#bell.focus { background: #fff; transform: scale(1.12); box-shadow: 0 0 0 3px #FF8A3D; }
+#bell { width: 56px; height: 56px; padding: 10px; box-sizing: border-box; border-radius: 28px; background: rgba(255, 255, 255, 0.16);
+  border: 3px solid rgba(255, 255, 255, 0.12); }
+#bell.focus { background: #fff; border-color: #8CB2F3; }
 #bell.focus svg * { stroke: #14162A; }
 
 /* MARK: views */
-.view { position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0; visibility: hidden;
-  transition: opacity 260ms ease, transform 260ms ease; transform: translateY(14px); }
-.view.on { opacity: 1; visibility: visible; transform: none; }
+.view { position: absolute; left: 0; top: 0; width: 100%; height: 100%; visibility: hidden; }
+.view.on { visibility: visible; }
 
 #hello { position: absolute; left: 112px; top: 318px; text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35); }
 #hello .greet { font-size: 18px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; opacity: 0.9; }
@@ -55,13 +55,16 @@ body.view-apps #bg .shade, body.view-settings #bg .shade { background: rgba(5, 6
 #favs { position: absolute; left: 112px; right: 112px; bottom: 96px; }
 #favs .label { font-size: 22px; font-weight: 600; margin-bottom: 18px; }
 #favs .hint { position: absolute; right: 0; top: 4px; font-size: 16px; opacity: 0.75; }
-#favs .row { display: flex; height: 240px; align-items: flex-start; position: relative; transition: transform 240ms ease; }
-#favs.moving .hint { color: #FFB27F; opacity: 1; }
+#favs .row { display: flex; height: 240px; align-items: flex-start; position: relative; }
+#favs.moving .hint { color: #8CB2F3; opacity: 1; }
 
 /* MARK: tiles */
 .tile { position: relative; flex: none; width: 236px; margin-right: 36px; text-align: center; }
 .tile .card { position: relative; height: 140px; border-radius: 22px; overflow: hidden; display: flex; align-items: center; justify-content: center;
-  background: #2A2D44; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35); transition: transform 180ms ease, box-shadow 180ms ease; }
+  background: #2A2D44; }
+/* The focus ring: a border drawn over the card, so nothing needs a shadow. */
+.tile .card:after { content: ''; position: absolute; left: 0; top: 0; right: 0; bottom: 0; border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.12); }
 .tile .card img { max-width: 70%; max-height: 62%; }
 .tile .card img.logo { width: auto; height: 64px; max-width: 72%; max-height: 64px; }
 .tile .card img.logo.wide { height: auto; width: 66%; max-width: 66%; max-height: 80px; }
@@ -71,15 +74,16 @@ body.view-apps #bg .shade, body.view-settings #bg .shade { background: rgba(5, 6
 .tile .card .glyph { width: 64px; height: 64px; }
 .tile .name { margin-top: 16px; font-size: 19px; font-weight: 500; opacity: 0.88; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tile .dot { position: absolute; right: 14px; top: 14px; width: 14px; height: 14px; border-radius: 7px; background: #8E92A8; }
-.tile .dot.on { background: #34D27B; box-shadow: 0 0 12px rgba(52, 210, 123, 0.8); }
+.tile .dot.on { background: #34D27B; }
 .tile .star { position: absolute; left: 12px; top: 10px; font-size: 22px; color: #FFD27A; }
-.tile.focus .card { transform: scale(1.1); box-shadow: 0 0 0 4px #fff, 0 18px 46px rgba(0, 0, 0, 0.55); }
+.tile.focus .card { transform: scale(1.08); }
+.tile.focus .card:after { border: 5px solid #fff; }
 .tile.focus .name { opacity: 1; font-weight: 600; }
-.tile.lifted .card { transform: scale(1.1) translateY(-18px); box-shadow: 0 0 0 4px #FF8A3D, 0 26px 50px rgba(0, 0, 0, 0.6); }
+.tile.lifted .card { transform: scale(1.08) translateY(-18px); }
+.tile.lifted .card:after { border: 5px solid #8CB2F3; }
 
 /* MARK: apps and settings */
 #apps, #settings { box-sizing: border-box; padding: 150px 112px 60px; overflow: hidden; }
-.view .scroller { transition: transform 260ms ease; }
 .view h2 { font-size: 26px; font-weight: 600; margin: 34px 0 22px; }
 .view h2:first-child { margin-top: 20px; }
 .grid { display: flex; flex-wrap: wrap; }
@@ -88,20 +92,19 @@ body.view-apps #bg .shade, body.view-settings #bg .shade { background: rgba(5, 6
 #apps .hint { font-size: 16px; opacity: 0.7; margin-top: 6px; }
 
 .cards .item { width: 392px; height: 132px; margin: 0 28px 28px 0; padding: 24px 28px; box-sizing: border-box; border-radius: 22px; text-align: left;
-  background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.14); display: flex; align-items: center;
-  transition: transform 160ms ease, background 160ms ease; }
+  background: rgba(255, 255, 255, 0.12); border: 3px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; }
 .cards .item .icon { flex: none; width: 52px; height: 52px; margin-right: 22px; }
 .cards .item .icon svg { width: 100%; height: 100%; }
 .cards .item .t { font-size: 24px; font-weight: 600; }
 .cards .item .s { font-size: 16px; opacity: 0.72; margin-top: 6px; line-height: 1.3; }
-.cards .item.focus { background: #fff; color: #14162A; transform: scale(1.05); box-shadow: 0 0 0 3px #FF8A3D; }
+.cards .item.focus { background: #fff; color: #14162A; border-color: #8CB2F3; }
 .cards .item.focus .icon path, .cards .item.focus .icon circle, .cards .item.focus .icon rect { fill: #14162A; }
 .cards .item.focus .icon [stroke] { stroke: #14162A; fill: none; }
 #settings .about { font-size: 16px; opacity: 0.6; margin-top: 10px; }
 
 #credit { position: absolute; right: 112px; bottom: 34px; max-width: 900px; font-size: 15px; opacity: 0.7; text-align: right;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6); transition: opacity 400ms ease; }
-body.view-apps #credit, body.view-settings #credit { opacity: 0; }
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6); }
+body.view-apps #credit, body.view-settings #credit { visibility: hidden; }
 
 /* MARK: toast */
 #toast { position: absolute; left: 50%; bottom: 56px; transform: translate(-50%, 30px); padding: 18px 30px; border-radius: 30px; font-size: 22px;
