@@ -131,11 +131,18 @@ o painel de notificações da Samsung.
 Os passos 1 a 3 são feitos uma vez só.
 
 **1. Na TV, ligue o Modo Desenvolvedor**
-1. Abra **Apps** e digite `1 2 3 4 5` no controle.
-2. Ligue o **Developer mode**.
-3. Em **Host PC IP**, coloque o IP do seu computador (no Windows, rode `ipconfig` e use o "Endereço IPv4").
-4. Desligue e ligue a TV.
-5. Anote o IP da TV: Configurações → Geral → Rede → Status da rede.
+1. Abra **Apps** e espere a tela carregar.
+2. Digite `1 2 3 4 5` no controle **rápido, em no máximo 2 segundos**. Mais devagar que isso, a TV ignora e a
+   janela não abre.
+   - No Smart Remote (o controle sem números), aperte o botão **123** para abrir o teclado numérico na tela antes.
+3. Ligue o **Developer mode**.
+4. Em **Host PC IP**, coloque o IP do seu computador (no Windows, rode `ipconfig` e use o "Endereço IPv4").
+5. Desligue e ligue a TV: segure o botão de ligar até ela reiniciar.
+6. Anote o IP da TV, que aparece em Configurações → Geral → Rede → Status da rede → Configurações de IP. Ele é
+   usado no passo 4, no comando `install.py`.
+
+> **Errou o IP do computador?** Repita os passos 1 e 2. A mesma janela abre de novo para você corrigir o
+> **Host PC IP**. Depois, reinicie a TV.
 
 **2. No computador, instale o Tizen SDK**
 
@@ -181,7 +188,8 @@ python tizen/build.py --sign dusk
 python tizen/install.py IP_DA_TV
 ```
 
-O app abre sozinho na TV no fim do último comando.
+Troque `IP_DA_TV` pelo IP que você anotou no passo 1 (por exemplo, `python tizen/install.py 192.168.0.20`). O
+app abre sozinho na TV no fim do último comando.
 
 **5. Para a TV já ligar no Dusk TV**
 
