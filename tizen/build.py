@@ -63,6 +63,10 @@ def inlined_index():
     html = read('index.html')
     html = html.replace('<link rel="stylesheet" href="home.css">', '<style>\n%s\n</style>' % read('home.css'))
     for name in re.findall(r'<script src="([^"]+)"></script>', html):
+        # config.local.js (your Unsplash key, kept out of git) is optional.
+        if not os.path.exists(os.path.join(WEB, name)):
+            html = html.replace('<script src="%s"></script>' % name, '')
+            continue
         code = read(name)
         if '</script' in code:
             sys.exit('%s contains "</script", which would end the inlined script early.' % name)
@@ -75,7 +79,7 @@ def build(profile):
         manifest = f.read()
     version = re.search(r'<widget [^>]*version="([^"]+)"', manifest).group(1)
     with zipfile.ZipFile(WGT, 'w', zipfile.ZIP_DEFLATED) as z:
-        bundled = ('index.html', 'home.css', 'config.js', 'tv.js', 'home.js')
+        bundled = ('index.html', 'home.css', 'config.js', 'config.local.js', 'config.local.example.js', 'tv.js', 'home.js')
         z.writestr('index.html', inlined_index())
         for folder, _, names in os.walk(WEB):
             for name in sorted(names):

@@ -4,10 +4,10 @@
 
 **Uma tela inicial limpa, rápida e personalizável para Smart TVs Samsung (Tizen).**
 
-Paisagens que mudam sozinhas, seus apps com os logos de verdade, relógio, Wi-Fi e notificações. Sem propaganda,
+Fotos que mudam sozinhas, do tipo que você escolher, seus apps com os logos de verdade, relógio, Wi-Fi e notificações. Sem propaganda,
 sem fileiras patrocinadas.
 
-![Versão](https://img.shields.io/badge/versão-1.7.0-8CB2F3?style=for-the-badge)
+![Versão](https://img.shields.io/badge/versão-1.8.0-8CB2F3?style=for-the-badge)
 ![Samsung Tizen](https://img.shields.io/badge/Samsung-Tizen%203.0%2B-1428A0?style=for-the-badge&logo=samsung&logoColor=white)
 ![Testado em](https://img.shields.io/badge/feito%20para-UN60AU8000%20(2021)-0F172A?style=for-the-badge)
 ![Licença MIT](https://img.shields.io/badge/licença-MIT-2EA44F?style=for-the-badge)
@@ -88,9 +88,12 @@ notificações. Por enquanto, o sino abre os Ajustes da TV (veja [Notificações
 
 ## ✨ Funcionalidades
 
-- 🏞️ **Paisagens novas todo dia:** as "imagens do dia" do Bing (sem chave e sem cadastro), trocando a cada 20 minutos.
-  Fotos de bichos, de interiores e de obras de arte ficam de fora.
-- 📴 **Funciona sem internet:** 5 paisagens salvas no próprio app entram quando a rede cai.
+- 🏞️ **Fundo do seu jeito:** em Ajustes → Plano de fundo, marque **Paisagens**, **Animais**, **Arquitetura**,
+  **Abstratos**, qualquer mistura deles ou **Todas**. As fotos trocam a cada 20 minutos e vêm do
+  [Unsplash](https://unsplash.com), com uma chave gratuita ([como configurar](#-fotos-do-unsplash)). Sem chave, vêm
+  as "imagens do dia" do Bing, separadas pelo título.
+- 📴 **Funciona sem internet:** 5 paisagens salvas no próprio app entram quando a rede cai, ou sempre, com
+  "Só as salvas".
 - 🎨 **Logos de verdade** para cerca de 30 apps: Netflix, YouTube, Prime Video, Globoplay, Disney+, HBO Max,
   Apple TV, Spotify, Twitch, Crunchyroll, Plex, Paramount+, PlayStation, Xbox e outros.
 - ⭐ **Favoritos editáveis pelo controle:** adicionar, tirar e reorganizar. Na aba Apps, eles ficam numa seção separada.
@@ -125,7 +128,7 @@ notificações. Por enquanto, o sino abre os Ajustes da TV (veja [Notificações
 | --- | --- |
 | Interface | HTML5, CSS3 e JavaScript **ES5** (o navegador das TVs Tizen é antigo), fonte [Inter](https://rsms.me/inter/) |
 | Integração com a TV | APIs web do Tizen: `tizen.application` (apps), `tizen.systeminfo` (Wi-Fi e rede), `tizen.tvwindow` (HDMI) |
-| Paisagens online | Arquivo de imagens do dia do Bing (`HPImageArchive`), sem chave |
+| Fotos online | [API do Unsplash](https://unsplash.com/developers) (tópicos de fotos, chave gratuita) ou o arquivo de imagens do dia do Bing (`HPImageArchive`), sem chave |
 | Empacotamento | Python 3 (`tizen/build.py`) e o `tizen package` do Tizen SDK 10 (antigo Tizen Studio) para assinar |
 | Instalação | Python 3 (`tizen/install.py`), que fala o protocolo SDB da TV direto, sem precisar do `sdb` |
 | Base | Camada de TV do [Free My TV](https://github.com/simbasjungles/free-my-tv) (MIT) |
@@ -223,11 +226,30 @@ window.DUSK = {
   logo: 'logos/samsung.svg',   // logo do canto (ou '' para mostrar o texto de `brand`)
   brand: 'Samsung',
   accent: '#8CB2F3',           // cor de destaque (azul pastel)
-  wallpaper: 'online',         // 'online' (paisagens da internet) ou 'salvas'
-  rotateMinutes: 20,           // de quantos em quantos minutos a paisagem troca
+  wallpaper: 'online',         // 'online' (fotos da internet) ou 'salvas'
+  wallTypes: ['paisagens'],    // tipos da primeira vez: 'paisagens', 'animais', 'arquitetura', 'abstratos'
+  unsplashKey: '',             // fica vazio aqui: a chave vai no config.local.js (veja abaixo)
+  rotateMinutes: 20,           // de quantos em quantos minutos a foto troca
   favorites: ['Netflix', 'YouTube', 'Prime Video', 'Globoplay', 'Disney+', 'Max', 'Apple TV', 'Spotify']
 };
 ```
+
+### 📷 Fotos do Unsplash
+
+Para ter fotos de todos os tipos, o Dusk usa a API do Unsplash, que pede uma chave gratuita:
+
+1. Crie uma conta em [unsplash.com/developers](https://unsplash.com/developers) e clique em **New Application**.
+2. Copie a **Access Key** (a Secret Key não é usada).
+3. Copie [`web/config.local.example.js`](web/config.local.example.js) para `web/config.local.js` e cole a chave
+   no lugar de `COLE_A_ACCESS_KEY_AQUI`.
+4. Gere e instale o app de novo (passo 4).
+
+O `config.local.js` fica fora do git, então a chave não vai para o GitHub. O Dusk pede 30 fotos de uma vez e só
+volta a pedir umas 10 horas depois, ou quando você muda os tipos: bem abaixo do limite de 50 pedidos por hora de uma
+chave nova. Sem chave, ou se o Unsplash não responder, as fotos vêm do Bing.
+
+> As TVs de 2021 não aceitam o certificado do servidor de imagens do Unsplash, então as fotos em si são carregadas
+> por HTTP. A lista de fotos e a chave continuam passando por HTTPS.
 
 - **Fotos offline:** troque os arquivos de [`web/wallpapers/`](web/wallpapers) por fotos suas de 1920×1080, com
   os mesmos nomes.
@@ -244,10 +266,11 @@ window.DUSK = {
 dusk-tv-samsung/
 ├── web/                  # o app (o que vai para a TV)
 │   ├── index.html
-│   ├── home.js           # telas, foco, favoritos, paisagens
+│   ├── home.js           # telas, foco, favoritos, fotos de fundo
 │   ├── home.css          # visual
 │   ├── tv.js             # ponte com a TV: apps, HDMI, Wi-Fi, notificações
 │   ├── config.js         # sua identidade visual
+│   ├── config.local.example.js  # modelo do config.local.js, com a chave do Unsplash (fora do git)
 │   ├── logos/            # logos dos apps (fontes em FONTES.txt)
 │   └── wallpapers/       # 5 paisagens para quando estiver sem internet
 ├── tizen/
@@ -313,8 +336,8 @@ Ideias abertas: novos temas, mais logos, suporte testado em outros modelos e tel
 - **Logos:** [Simple Icons](https://simpleicons.org) (CC0) e Wikimedia Commons. Detalhes em
   [`web/logos/FONTES.txt`](web/logos/FONTES.txt).
 - **Fonte:** [Inter](https://rsms.me/inter/) (SIL Open Font License).
-- **Paisagens online:** imagens do dia do [Bing](https://www.bing.com), exibidas direto do Bing e não guardadas
-  neste repositório.
+- **Fotos online:** [Unsplash](https://unsplash.com), com o nome de cada fotógrafo na legenda, e imagens do dia do
+  [Bing](https://www.bing.com). As duas são exibidas direto da fonte e não ficam guardadas neste repositório.
 
 > As marcas e logos pertencem aos seus donos. Este projeto não tem ligação com a Samsung nem com os serviços
 > citados.

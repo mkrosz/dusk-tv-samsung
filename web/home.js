@@ -126,7 +126,8 @@
   function applyAccent() {
     var css = '.tab.focus,#bell.focus,.cards .item.focus{border-color:' + ACCENT + '}' +
       '.tile.lifted:before{border-color:' + ACCENT + '}#favs.moving .hint{color:' + ACCENT + '}' +
-      '.menu .opt.focus{border-color:' + ACCENT + '}';
+      '.menu .opt.focus,.cards .item.asking{border-color:' + ACCENT + '}' +
+      '.menu .opt.check.on:before{background:' + ACCENT + ';border-color:' + ACCENT + '}';
     var tag = document.createElement('style');
     tag.textContent = css;
     document.head.appendChild(tag);
@@ -147,7 +148,7 @@
     $('#hello .date').textContent = date.charAt(0).toUpperCase() + date.slice(1);
   }
 
-  // MARK: - Wallpaper: Bing's photos of the day online, five saved ones offline
+  // MARK: - Wallpaper: photos of the kinds you pick online (Unsplash with a key, else Bing), five saved ones offline
 
   var SAVED = [
     {src: 'wallpapers/paisagem-1.jpg', credit: 'Pôr do sol nas montanhas'},
@@ -156,16 +157,39 @@
     {src: 'wallpapers/paisagem-4.jpg', credit: 'Entardecer no lago'},
     {src: 'wallpapers/paisagem-5.jpg', credit: 'Tarde fria'}
   ];
-  // Bing's archive serves the last 16 days of photos, no key needed. Most are landscapes; captions naming animals,
-  // buildings' insides or artworks are left out.
-  var FEED = 'https://www.bing.com/HPImageArchive.aspx?format=js&mkt=pt-BR&n=8&idx=';
-  var NOT_LANDSCAPE = /lobo|preguiça|urso|raposa|leão|leoa|tigre|baleia|golfinho|pinguim|coruja|pássaro|ave[s ]|águia|beija-flor|macaco|elefante|girafa|zebra|tartaruga|foca|lontra|esquilo|cervo|alce|borboleta|abelha|inseto|peixe|polvo|fóssil|réplica|pintura|rupestre|biblioteca|gabinete|leitura|museu|interior|estátua|escultura|mosaico/i;
-  var KEY_FEED = 'dusk.feed', FEED_HOURS = 6;
+  // The kinds of photo, with the Unsplash topics behind each.
+  var TYPES = [
+    {key: 'paisagens', name: 'Paisagens', topics: ['nature']},
+    {key: 'animais', name: 'Animais', topics: ['animals']},
+    {key: 'arquitetura', name: 'Arquitetura', topics: ['architecture-interior']},
+    {key: 'abstratos', name: 'Abstratos', topics: ['3d-renders', 'textures-patterns']}
+  ];
+  var KEY_TYPES = 'dusk.wallTypes', KEY_FEED = 'dusk.feed2', KEY_TOPICS = 'dusk.topics';
+
+  // Unsplash sorts its photos by topic but needs a free key (web/config.local.js). 30 random photos last 10 hours at
+  // one every 20 minutes, so it's a request or two a day, far under the 50 an hour a new key allows.
+  var UNSPLASH = 'https://api.unsplash.com', UNSPLASH_KEY = CONF.unsplashKey || '', UNSPLASH_HOURS = 10;
+
+  // Without a key: Bing's archive, the last 16 days of photos, sorted by words in their captions. Paintings, statues
+  // and fossils only show with every kind picked.
+  var BING = 'https://www.bing.com/HPImageArchive.aspx?format=js&mkt=pt-BR&n=8&idx=', BING_HOURS = 6;
+  var ANIMAL = /lobo|preguiça|urso|raposa|leão|leoa|tigre|baleia|golfinho|pinguim|coruja|pássaro|ave[s ]|águia|beija-flor|macaco|elefante|girafa|zebra|tartaruga|foca|lontra|esquilo|cervo|alce|borboleta|abelha|inseto|peixe|polvo|animal|filhote/i;
+  var BUILT = /igreja|catedral|basílica|mesquita|templo|mosteiro|castelo|palácio|fortaleza|ponte|farol|torre|edifício|prédio|arquitetura|biblioteca|gabinete|leitura|museu|interior|cidade|aldeia|vila |bairro|rua |praça|ruínas/i;
+  var ART = /fóssi|réplica|pintura|rupestre|estátua|escultura|mosaico/i;
 
   var feed = load(KEY_FEED, null);
   var wallIndex = Math.floor(Math.random() * 100);
 
   function wallChoice() { return load(KEY_WALL, CONF.wallpaper || 'online'); }
+
+  /** The kinds picked (keys of TYPES); at least one. */
+  function wallTypes() {
+    var known = TYPES.map(function (t) { return t.key; });
+    var picked = (load(KEY_TYPES, null) || CONF.wallTypes || ['paisagens']).filter(function (k) { return known.indexOf(k) >= 0; });
+    return picked.length ? picked : ['paisagens'];
+  }
+
+  function allTypes() { return wallTypes().length === TYPES.length; }
 
   function get(url, done) {
     var x = new XMLHttpRequest(), finished = false;
@@ -181,26 +205,81 @@
     try { x.open('GET', url, true); x.send(); } catch (e) { finish(null); }
   }
 
-  /** The online photos, fetched again every few hours; done(list), empty without internet. */
-  function loadFeed(done) {
-    if (feed && Date.now() - feed.at < FEED_HOURS * 3600000 && feed.list.length) { done(feed.list); return; }
+  function bingType(caption) {
+    if (ART.test(caption)) return 'arte';
+    if (ANIMAL.test(caption)) return 'animais';
+    if (BUILT.test(caption)) return 'arquitetura';
+    return 'paisagens';
+  }
+
+  function fetchBing(done) {
     var pages = [null, null], left = 2;
     [0, 8].forEach(function (idx, p) {
-      get(FEED + idx, function (res) {
+      get(BING + idx, function (res) {
         pages[p] = res && res.images ? res.images : [];
         if (--left > 0) return;
         var seen = {}, list = [];
         pages[0].concat(pages[1]).forEach(function (im) {
-          if (!im.urlbase || seen[im.urlbase] || NOT_LANDSCAPE.test(im.copyright || '')) return;
+          if (!im.urlbase || seen[im.urlbase]) return;
           seen[im.urlbase] = true;
-          list.push({src: 'https://www.bing.com' + im.urlbase + '_1920x1080.jpg', credit: im.copyright || ''});
+          list.push({src: 'https://www.bing.com' + im.urlbase + '_1920x1080.jpg', credit: im.copyright || '', type: bingType(im.copyright || '')});
         });
-        if (list.length) {
-          feed = {at: Date.now(), list: list};
-          save(KEY_FEED, feed);
-        }
-        done(feed ? feed.list : []);
+        done(list);
       });
+    });
+  }
+
+  /** Unsplash wants topic ids, not names: each is asked once and kept. */
+  function topicIds(slugs, done) {
+    var known = load(KEY_TOPICS, {}), missing = slugs.filter(function (s) { return !known[s]; }), left = missing.length;
+    function finish() { done(slugs.map(function (s) { return known[s]; }).filter(function (id) { return id; })); }
+    if (!left) { finish(); return; }
+    missing.forEach(function (slug) {
+      get(UNSPLASH + '/topics/' + slug + '?client_id=' + UNSPLASH_KEY, function (t) {
+        if (t && t.id) known[slug] = t.id;
+        if (--left > 0) return;
+        save(KEY_TOPICS, known);
+        finish();
+      });
+    });
+  }
+
+  function fetchUnsplash(done) {
+    var slugs = [];
+    TYPES.forEach(function (t) { if (wallTypes().indexOf(t.key) >= 0) slugs = slugs.concat(t.topics); });
+    topicIds(slugs, function (ids) {
+      if (!ids.length) { done([]); return; }
+      get(UNSPLASH + '/photos/random?count=30&orientation=landscape&content_filter=high&topics=' + ids.join(',') +
+          '&client_id=' + UNSPLASH_KEY, function (res) {
+        done((res && res.length ? res : []).map(function (p) {
+          var place = p.location && p.location.name;
+          // The 2021 TVs don't trust images.unsplash.com's certificate (GlobalSign's R46 chain) and every photo fails;
+          // the same address over plain http loads. The list itself still comes over https.
+          return {src: p.urls.raw.replace(/^https:/, 'http:') + '&w=1920&h=1080&fit=crop&q=80&fm=jpg',
+                  credit: (place ? place + ' · ' : '') + 'Foto de ' + p.user.name + ' no Unsplash'};
+        }));
+      });
+    });
+  }
+
+  /** The online photos of the kinds picked, fetched again after a while; done(list), empty without internet. */
+  function loadFeed(done) {
+    var key = UNSPLASH_KEY ? 'unsplash:' + wallTypes().join(',') : 'bing';
+    var hours = UNSPLASH_KEY ? UNSPLASH_HOURS : BING_HOURS;
+    function pick() {
+      if (!feed || feed.key.indexOf('unsplash:') === 0) return feed ? feed.list : [];
+      var types = wallTypes();
+      return allTypes() ? feed.list : feed.list.filter(function (e) { return types.indexOf(e.type) >= 0; });
+    }
+    if (feed && feed.key === key && Date.now() - feed.at < hours * 3600000 && feed.list.length) { done(pick()); return; }
+    function keep(k, list) {
+      if (list.length) { feed = {at: Date.now(), key: k, list: list}; save(KEY_FEED, feed); }
+    }
+    if (!UNSPLASH_KEY) { fetchBing(function (list) { keep('bing', list); done(pick()); }); return; }
+    // A wrong key or Unsplash down: Bing's photos instead.
+    fetchUnsplash(function (list) {
+      if (list.length) { keep(key, list); done(pick()); return; }
+      fetchBing(function (list2) { keep('bing', list2); done(pick()); });
     });
   }
 
@@ -224,22 +303,56 @@
     probe.src = entry.src;
   }
 
-  function rotate() {
+  /** The next photo; done(found) says whether the kinds picked had any online. */
+  function rotate(done) {
     wallIndex++;
     if (wallChoice() === 'salvas') { showWall(SAVED[wallIndex % SAVED.length]); return; }
     loadFeed(function (list) {
       var pool = list.length ? list : SAVED;
       showWall(pool[wallIndex % pool.length]);
+      if (done) done(list.length > 0);
     });
   }
 
-  var WALL_NAMES = {online: 'Paisagens da internet', salvas: 'Fotos salvas'};
+  /** "Paisagens e Animais", "Todas as fotos" or "Só as fotos salvas", for the Background card. */
+  function wallSummary() {
+    if (wallChoice() === 'salvas') return 'Só as fotos salvas';
+    if (allTypes()) return 'Todas as fotos';
+    var names = TYPES.filter(function (t) { return wallTypes().indexOf(t.key) >= 0; }).map(function (t) { return t.name; });
+    return names.length > 1 ? names.slice(0, -1).join(', ') + ' e ' + names[names.length - 1] : names[0];
+  }
 
-  function toggleWallMode() {
-    var pick = wallChoice() === 'online' ? 'salvas' : 'online';
-    save(KEY_WALL, pick);
-    rotate();
-    return pick;
+  /** The Background card's checklist: any mix of kinds, all of them, or only the saved photos. */
+  function wallItems() {
+    var online = function () { return wallChoice() !== 'salvas'; };
+    var items = [{
+      label: 'Todas', on: function () { return online() && allTypes(); },
+      pick: function () {
+        save(KEY_WALL, 'online');
+        save(KEY_TYPES, TYPES.map(function (t) { return t.key; }));
+        return true;
+      }
+    }];
+    TYPES.forEach(function (t) {
+      items.push({
+        label: t.name, on: function () { return online() && wallTypes().indexOf(t.key) >= 0; },
+        pick: function () {
+          var types = wallTypes(), at = types.indexOf(t.key);
+          if (!online()) types = [t.key];
+          else if (at < 0) types.push(t.key);
+          else if (types.length > 1) types.splice(at, 1);
+          else { toast('Deixe pelo menos um tipo marcado'); return true; }
+          save(KEY_WALL, 'online');
+          save(KEY_TYPES, types);
+          return true;
+        }
+      });
+    });
+    items.push({
+      label: 'Só as salvas (sem internet)', on: function () { return !online(); },
+      pick: function () { save(KEY_WALL, 'salvas'); return true; }
+    });
+    return items;
   }
 
   // MARK: - Network and notifications
@@ -402,16 +515,21 @@
 
     var personal = $('#settings .personal');
     personal.innerHTML = '';
-    var wall = card(SVG.picture, 'Plano de fundo', WALL_NAMES[wallChoice()] + ' · OK para trocar', null);
+    var wall = card(SVG.picture, 'Plano de fundo', wallSummary() + ' · OK para escolher', null);
     wall.onAction = function () {
-      var pick = toggleWallMode();
-      $('.s', wall).textContent = WALL_NAMES[pick] + ' · OK para trocar';
-      toast(pick === 'online' ? 'Paisagens novas da internet' : 'Usando as 5 fotos salvas');
+      var before = wallSummary();
+      openMenu(wall, wallItems(), $('#settings'), function () {
+        $('.s', wall).textContent = wallSummary() + ' · OK para escolher';
+        if (wallSummary() === before) return;
+        rotate(function (found) {
+          toast(found ? 'Trocando o fundo…' : 'Sem fotos desse tipo agora: usando as salvas');
+        });
+      });
     };
     personal.appendChild(wall);
-    personal.appendChild(card(SVG.next, 'Próxima paisagem', 'Troca o fundo agora', function () {
+    personal.appendChild(card(SVG.next, 'Próxima foto', 'Troca o fundo agora', function () {
       rotate();
-      toast('Trocando a paisagem…');
+      toast('Trocando o fundo…');
     }));
     personal.appendChild(card(SVG.reset, 'Restaurar favoritos', 'Volta à lista inicial', function () {
       favs = defaultFavs();
@@ -640,53 +758,66 @@
       $('#favs').classList.add('moving');
       $('#favs .hint').textContent = '◀ ▶ para mover · OK para soltar';
     } else if (view === 'apps') {
-      openMenu(el);
+      appMenu(el);
     }
   }
 
-  // MARK: - App menu
+  // MARK: - Menus
 
   // Holding OK on an app in the Apps tab asks first: the options open just below its card, so a held OK never pins (or
   // unpins) an app by itself, and the release that follows never opens it. Samsung lets no app uninstall another,
-  // so there's no Uninstall here.
-  var menu = null;   // {tile, el}
+  // so there's no Uninstall here. The Background card uses the same menu as a checklist.
+  var menu = null;   // {anchor, scope, el, closed}
 
-  function menuButton(label, action) {
-    var b = document.createElement('button');
-    b.className = 'opt';
-    b.setAttribute('data-f', '');
-    b.textContent = label;
-    b.onAction = action;
-    return b;
-  }
-
-  function openMenu(tileEl) {
-    var id = tileEl.getAttribute('data-id'), pinned = favs.indexOf(id) >= 0;
+  /**
+   * A menu below `anchor`, dimming the rest of `scope`. Each item is {label, pick, on}: a pick that returns true keeps
+   * the menu open (a checklist, whose marks come from on()); closed() runs when it closes.
+   */
+  function openMenu(anchor, items, scope, closed) {
     var el = document.createElement('div');
     el.className = 'menu';
-    el.appendChild(menuButton(pinned ? 'Tirar dos favoritos' : 'Favoritar', function () {
-      closeMenu();
-      toggleFav(id);
-    }));
-    el.appendChild(menuButton('Abrir', function () {
-      closeMenu();
-      openApp(id);
-    }));
-    tileEl.appendChild(el);
-    tileEl.classList.add('asking');
-    $('#apps').classList.add('asking');
-    menu = {tile: tileEl, el: el};
+    items.forEach(function (it) {
+      var b = document.createElement('button');
+      b.className = 'opt' + (it.on ? ' check' : '');
+      b.setAttribute('data-f', '');
+      b.textContent = it.label;
+      b.onAction = function () {
+        if (it.pick() === true && menu) paintMenu(); else closeMenu();
+      };
+      b.item = it;
+      el.appendChild(b);
+    });
+    anchor.appendChild(el);
+    anchor.classList.add('asking');
+    scope.classList.add('asking');
+    menu = {anchor: anchor, scope: scope, el: el, closed: closed};
+    paintMenu();
     focus(el.firstChild);
+  }
+
+  function paintMenu() {
+    $$('.opt', menu.el).forEach(function (b) {
+      if (b.item.on) b.classList.toggle('on', !!b.item.on());
+    });
   }
 
   function closeMenu() {
     if (!menu) return;
-    var t = menu.tile;
-    t.classList.remove('asking');
-    $('#apps').classList.remove('asking');
-    if (menu.el.parentNode) menu.el.parentNode.removeChild(menu.el);
+    var m = menu;
     menu = null;
-    focus(document.body.contains(t) ? t : $('#apps [data-f]'));
+    m.anchor.classList.remove('asking');
+    m.scope.classList.remove('asking');
+    if (m.el.parentNode) m.el.parentNode.removeChild(m.el);
+    focus(document.body.contains(m.anchor) ? m.anchor : $('[data-f]', m.scope));
+    if (m.closed) m.closed();
+  }
+
+  function appMenu(tileEl) {
+    var id = tileEl.getAttribute('data-id'), pinned = favs.indexOf(id) >= 0;
+    openMenu(tileEl, [
+      {label: pinned ? 'Tirar dos favoritos' : 'Favoritar', pick: function () { closeMenu(); toggleFav(id); }},
+      {label: 'Abrir', pick: function () { closeMenu(); openApp(id); }}
+    ], $('#apps'));
   }
 
   function toggleFav(id) {
@@ -747,7 +878,7 @@
       return;
     }
     // The app menu: ▲ ▼ between its two options, Back (or ◀ ▶) closes it. A redraw of the Apps tab may have taken it.
-    if (menu && !document.body.contains(menu.el)) { menu = null; $('#apps').classList.remove('asking'); }
+    if (menu && !document.body.contains(menu.el)) { menu.scope.classList.remove('asking'); menu = null; }
     if (menu) {
       var opts = $$('.opt', menu.el), at = opts.indexOf(focused);
       if (k === keys.up && at > 0) focus(opts[at - 1]);

@@ -88,20 +88,30 @@ body.view-apps #bg .shade, body.view-settings #bg .shade { background: rgba(5, 6
 .tile.focus .name { opacity: 1; font-weight: 600; }
 .tile.lifted .card { transform: scale(1.08) translateY(-18px); }
 .tile.lifted:before { border-color: #8CB2F3; transform: translateY(-18px); }
-/* The app menu (hold OK in Apps): two options below the card and its name, drawn like the tabs (the same translucent
-   pill bar, the focused option white with the accent border). It grows with its words and centers under the card.
-   Everything else in the tab dims, so the app being changed stands out. */
-#apps.asking h2, #apps.asking .hint, #apps.asking .tile { opacity: 0.25; }
-#apps.asking .tile.asking { opacity: 1; }
-.tile.asking { z-index: 3; }
+/* Menus: the app menu (hold OK in Apps) and the Background checklist (Settings). They open below their card, drawn
+   like the tabs (the same translucent pill bar, the focused option white with the accent border), grow with their
+   words, and dim everything else in the tab so the card being changed stands out. The tabs' white tint sits on a solid
+   dark base here, so the cards beneath don't show through. */
+#apps.asking h2, #apps.asking .hint, #apps.asking .tile,
+#settings.asking h2, #settings.asking .about, #settings.asking .tile, #settings.asking .item { opacity: 0.25; }
+#apps.asking .tile.asking, #settings.asking .item.asking { opacity: 1; }
+.tile.asking, .cards .item.asking { z-index: 3; }
 .tile.asking .card { transform: scale(1.08); }
 .tile.asking:before { border-color: #fff; }
-.tile .menu { position: absolute; left: 50%; top: 196px; min-width: 100%; transform: translateX(-50%); box-sizing: border-box;
-  padding: 6px; border-radius: 30px; background: rgba(255, 255, 255, 0.16); border: 1px solid rgba(255, 255, 255, 0.18); }
+.menu { position: absolute; box-sizing: border-box; padding: 6px; border-radius: 30px;
+  background: linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16)), #15172A;
+  border: 1px solid rgba(255, 255, 255, 0.18); }
+.tile .menu { left: 50%; top: 196px; min-width: 100%; transform: translateX(-50%); }
+.cards .item .menu { left: 0; top: 144px; min-width: 300px; }
 .menu .opt { display: block; width: 100%; height: 48px; padding: 0 26px; box-sizing: border-box; border: 3px solid transparent;
   border-radius: 24px; font-size: 22px; font-weight: 500; color: rgba(255, 255, 255, 0.82); white-space: nowrap; }
 .menu .opt + .opt { margin-top: 4px; }
 .menu .opt.focus { background: #fff; color: #14162A; border-color: #8CB2F3; }
+/* A checklist option: a ring before its words, filled with the accent when it's on. */
+.menu .opt.check { text-align: left; padding-left: 20px; }
+.menu .opt.check:before { content: ''; display: inline-block; width: 18px; height: 18px; margin-right: 14px; vertical-align: -3px;
+  box-sizing: border-box; border-radius: 9px; border: 2px solid currentColor; }
+.menu .opt.check.on:before { background: #8CB2F3; border-color: #8CB2F3; }
 
 /* MARK: apps and settings */
 #apps, #settings { box-sizing: border-box; padding: 150px 112px 60px; overflow: hidden; }
@@ -113,15 +123,16 @@ body.view-apps #bg .shade, body.view-settings #bg .shade { background: rgba(5, 6
 #apps .hint { font-size: 16px; opacity: 0.7; margin-top: 6px; }
 #apps .empty { height: 140px; display: flex; align-items: center; font-size: 20px; opacity: 0.75; margin-bottom: 30px; }
 
-.cards .item { width: 392px; height: 132px; margin: 0 28px 28px 0; padding: 24px 28px; box-sizing: border-box; border-radius: 22px; text-align: left;
+.cards .item { position: relative; width: 392px; height: 132px; margin: 0 28px 28px 0; padding: 24px 28px; box-sizing: border-box; border-radius: 22px; text-align: left;
   background: rgba(255, 255, 255, 0.12); border: 3px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; }
 .cards .item .icon { flex: none; width: 52px; height: 52px; margin-right: 22px; }
 .cards .item .icon svg { width: 100%; height: 100%; }
 .cards .item .t { font-size: 24px; font-weight: 600; }
 .cards .item .s { font-size: 16px; opacity: 0.72; margin-top: 6px; line-height: 1.3; }
-.cards .item.focus { background: #fff; color: #14162A; border-color: #8CB2F3; }
-.cards .item.focus .icon path, .cards .item.focus .icon circle, .cards .item.focus .icon rect { fill: #14162A; }
-.cards .item.focus .icon [stroke] { stroke: #14162A; fill: none; }
+.cards .item.focus, .cards .item.asking { background: #fff; color: #14162A; border-color: #8CB2F3; }
+.cards .item.focus .icon path, .cards .item.focus .icon circle, .cards .item.focus .icon rect,
+.cards .item.asking .icon path, .cards .item.asking .icon circle, .cards .item.asking .icon rect { fill: #14162A; }
+.cards .item.focus .icon [stroke], .cards .item.asking .icon [stroke] { stroke: #14162A; fill: none; }
 #settings .about { font-size: 16px; opacity: 0.6; margin-top: 10px; }
 
 #credit { position: absolute; right: 112px; bottom: 34px; max-width: 900px; font-size: 15px; opacity: 0.7; text-align: right;

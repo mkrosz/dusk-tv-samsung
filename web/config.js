@@ -7,9 +7,15 @@ window.DUSK = {
   brand: 'Samsung',
   // Cor de destaque: o contorno do item em foco.
   accent: '#8CB2F3',
-  // Fundo: 'online' (paisagens novas da internet, com as salvas quando estiver sem internet) ou 'salvas'.
+  // Fundo: 'online' (fotos novas da internet, com as salvas quando estiver sem internet) ou 'salvas'.
   wallpaper: 'online',
-  // De quantos em quantos minutos a paisagem troca.
+  // Tipos de foto da primeira vez: 'paisagens', 'animais', 'arquitetura' e 'abstratos'. Depois, vale o que você
+  // escolher na TV, em Ajustes → Plano de fundo.
+  wallTypes: ['paisagens'],
+  // Chave do Unsplash, para ter fotos de todos os tipos. Não coloque aqui: crie web/config.local.js (veja o
+  // config.local.example.js), que fica fora do git. Sem chave, as fotos vêm do Bing.
+  unsplashKey: '',
+  // De quantos em quantos minutos a foto troca.
   rotateMinutes: 20,
   // Favoritos da primeira vez (pelo nome do app, sem diferenciar maiúsculas). Depois, o que você arrumar na TV vale.
   favorites: ['Netflix', 'YouTube', 'Prime Video', 'Globoplay', 'Disney+', 'Max', 'Apple TV', 'Spotify']

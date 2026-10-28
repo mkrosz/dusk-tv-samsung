@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.8.0] - 2026-10-28
+
+### Novo
+- **Escolha o tipo de foto do fundo.** Em Ajustes → Personalizar, o OK no cartão "Plano de fundo" abre uma lista
+  embaixo dele, no estilo do menu de Apps, com **Todas**, **Paisagens**, **Animais**, **Arquitetura**, **Abstratos** e
+  **Só as salvas (sem internet)**. Dá para marcar quantos tipos quiser; Voltar fecha e já troca o fundo. O cartão
+  mostra a escolha, por exemplo "Paisagens e Animais".
+- **Fotos do Unsplash**, por tópico: Natureza, Animais, Arquitetura e Interiores, Renders 3D e Texturas. Precisam de
+  uma chave gratuita, que fica em `web/config.local.js`, fora do git (modelo em `web/config.local.example.js`). O app
+  pede 30 fotos por vez, com o nome do fotógrafo na legenda.
+- **Sem chave**, as imagens do dia do Bing são separadas pelo título: castelos e basílicas em Arquitetura, lobos em
+  Animais, e assim por diante. Pinturas, estátuas e fósseis só aparecem com "Todas".
+
+### Mudou
+- "Próxima paisagem" virou **Próxima foto**.
+- `build.py` coloca o `config.local.js` no app quando ele existe.
+
+### Corrigido na TV
+- As TVs de 2021 não aceitam o certificado do servidor de imagens do Unsplash (`images.unsplash.com`, cadeia
+  GlobalSign R46), e nenhuma foto carregava. As imagens agora vêm por HTTP; a lista e a chave continuam por HTTPS.
+
 ## [1.7.0] - 2026-10-28
 
 ### Novo
