@@ -53,6 +53,8 @@
       '<circle cx="12" cy="12" r="3" fill="none" stroke="#fff" stroke-width="1.9"/></svg>',
     bellcard: '<svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>' +
       '<path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    // Sliders (after Lucide's "sliders-horizontal", ISC), for the quick settings panel.
+    sliders: '<svg viewBox="0 0 24 24"><path d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/></svg>',
     next: '<svg viewBox="0 0 48 48"><path d="M8 10l18 14L8 38zm20 0l18 14-18 14z" fill="#fff"/></svg>',
     store: '<svg class="glyph" viewBox="0 0 48 48"><path d="M10 16h28l-2.2 24.3A4 4 0 0 1 31.8 44H16.2a4 4 0 0 1-4-3.7z" fill="none" stroke="#fff" stroke-width="3.2" stroke-linejoin="round"/>' +
       '<path d="M17 20v-6a7 7 0 0 1 14 0v6M24 25v11M18.5 30.5h11" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/></svg>'
@@ -424,6 +426,8 @@
         function () { openTvSettings('account', 'Conta Samsung', 'Geral → Gerenciador do sistema → Conta Samsung'); }));
     system.appendChild(card(SVG.privacy, 'Privacidade', 'Termos, privacidade e anúncios',
         function () { openTvSettings('privacy', 'Privacidade', 'Geral → Termos e Privacidade'); }));
+    system.appendChild(card(SVG.sliders, 'Ajustes rápidos', 'Controles, saída de som e modo de jogo',
+        function () { openTvSettings('quick', 'os Ajustes rápidos', ''); }));
     system.appendChild(card(SVG.bellcard, 'Notificações', 'Em teste: por enquanto abre os Ajustes da TV', openNotifications));
     system.appendChild(card(SVG.gear, 'Ajustes da TV', 'Imagem, som, suporte e tudo mais',
         function () { openTvSettings('', 'os Ajustes da TV', ''); }));

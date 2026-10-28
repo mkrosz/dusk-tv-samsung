@@ -7,7 +7,7 @@
 Paisagens que mudam sozinhas, seus apps com os logos de verdade, relógio, Wi-Fi e notificações. Sem propaganda,
 sem fileiras patrocinadas.
 
-![Versão](https://img.shields.io/badge/versão-1.3.3-8CB2F3?style=for-the-badge)
+![Versão](https://img.shields.io/badge/versão-1.4.0-8CB2F3?style=for-the-badge)
 ![Samsung Tizen](https://img.shields.io/badge/Samsung-Tizen%203.0%2B-1428A0?style=for-the-badge&logo=samsung&logoColor=white)
 ![Testado em](https://img.shields.io/badge/feito%20para-UN60AU8000%20(2021)-0F172A?style=for-the-badge)
 ![Licença MIT](https://img.shields.io/badge/licença-MIT-2EA44F?style=for-the-badge)
@@ -72,7 +72,8 @@ colocar ou tirar dos favoritos (⭐).
 
 ### Ajustes
 Entradas (TV ao vivo e HDMI 1 a 4, com um ponto verde quando há um aparelho ligado), plano de fundo, Rede e
-Wi-Fi, Conta Samsung, Privacidade, Notificações (em teste) e os Ajustes da TV.
+Wi-Fi, Conta Samsung, Privacidade, **Ajustes rápidos** (controles, saída de som e modo de jogo), Notificações
+(em teste) e os Ajustes da TV.
 
 <img src="docs/screenshots/ajustes.png" alt="Aba de ajustes" width="100%">
 
@@ -96,6 +97,7 @@ notificações. Por enquanto, o sino abre os Ajustes da TV (veja [Notificações
 - 📶 **Status da rede** em tempo real: força do Wi-Fi ou cabo.
 - 🔔 **Sino de notificações:** por enquanto abre os Ajustes da TV. O painel de notificações da Samsung ainda está
   [em investigação](#-notificações-em-investigação).
+- 🎮 **Ajustes rápidos:** o painel lateral da Samsung com controles, saída de som e modo de jogo, a um clique.
 - 🔌 **Entradas HDMI** com status de conexão.
 - ⚙️ **Identidade visual** num só arquivo: logo, cor de destaque, tipo de fundo e favoritos iniciais.
 - 🪶 **Leve e rápido:** JavaScript puro, sem frameworks, sem sombras e sem blur. Os favoritos aparecem em cerca de 0,5 s, e a navegação roda a 60 quadros por segundo, medido numa UN60AU8000.

@@ -384,6 +384,22 @@ var TV = (function () {
     notifications: ['com.samsung.tv.notification-app']   // answers "launched" on the AU8000 but shows nothing
   };
 
+  // Samsung's quick settings side panel. Asked through an app control with a "menu" value it shows the controllers,
+  // sound output and game mode on a UN60AU8000 (seen on screen); launched plainly it opens on sound instead.
+  var QUICK_PANEL = 'com.samsung.tv.quickpanel';
+
+  function samsungQuick(done) {
+    try {
+      window.tizen.application.getAppInfo(QUICK_PANEL);
+      var data = [new window.tizen.ApplicationControlData('menu', ['notification'])];
+      var control = new window.tizen.ApplicationControl('http://tizen.org/appcontrol/operation/default', null, null, null, data);
+      window.tizen.application.launchAppControl(control, QUICK_PANEL, function () { done(true); },
+          function () { samsungLaunch(QUICK_PANEL, done); });
+    } catch (e) {
+      done(false);
+    }
+  }
+
   /** Opens the first installed app of a list; done(ok, id), with ok false when none is installed or opens. */
   function samsungFirst(ids, done) {
     var i = 0;
@@ -642,12 +658,13 @@ var TV = (function () {
     },
 
     /**
-     * One of the TV's settings screens ('network', 'account', 'privacy'), opened directly; done(ok, direct) where
-     * direct is false when only the main settings could open.
+     * One of the TV's settings screens ('network', 'account', 'privacy', 'quick'), opened directly; done(ok, direct)
+     * where direct is false when only the main settings could open.
      */
     system: function (kind, done) {
       var self2 = this;
       if (!samsung) { if (done) setTimeout(function () { done(true, true); }, 0); return; }
+      if (kind === 'quick') { samsungQuick(function (ok) { if (ok) { if (done) done(true, true); } else self2.settings(function (ok2) { if (done) done(ok2, false); }); }); return; }
       samsungFirst(SYSTEM_APPS[kind] || [], function (ok) {
         if (ok) { if (done) done(true, true); return; }
         self2.settings(function (ok2) { if (done) done(ok2, false); });

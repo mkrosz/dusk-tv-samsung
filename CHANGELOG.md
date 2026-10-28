@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0] - 2026-10-28
+
+### Novo
+- **Cartão "Ajustes rápidos"** em Ajustes → Sistema da TV. Ele abre o painel lateral da Samsung
+  (`com.samsung.tv.quickpanel`) com os controles, a saída de som e o modo de jogo, a mesma tela que apareceu num dos
+  testes de notificações. Em TVs sem esse painel, abre os Ajustes da TV.
+
 ## [1.3.3] - 2026-10-28
 
 ### Mudou
