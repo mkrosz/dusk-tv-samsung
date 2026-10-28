@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0] - 2026-10-28
+
+### Removido
+- **O cartão "Botão Home"**, que entrou na 1.5.0. Ele só funcionava com o Dusk aberto: dentro de outros apps, a TV não
+  avisa o Dusk do Home. Além disso, cada volta recarregava a tela. O Home volta a abrir sempre a barra da Samsung, e o
+  código fica igual ao da 1.4.1.
+
 ## [1.5.1] - 2026-10-28
 
 ### Corrigido (documentação)
