@@ -7,7 +7,7 @@
 
   var CONF = window.DUSK || {};
   var ACCENT = CONF.accent || '#8CB2F3';
-  var KEY_FAVS = 'dusk.favs', KEY_WALL = 'dusk.wall';
+  var KEY_FAVS = 'dusk.favs', KEY_WALL = 'dusk.wall', KEY_HOME = 'dusk.homeKey';
   var LONG_PRESS = 600;
 
   var $ = function (sel, root) { return (root || document).querySelector(sel); };
@@ -56,6 +56,9 @@
     // A game controller (after Lucide's "gamepad-2", ISC), for Samsung's game panel.
     gamepad: '<svg viewBox="0 0 24 24"><path d="M6 11h4M8 9v4M15 12h.01M18 10h.01" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/>' +
       '<path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    // A house (after Lucide's "house", ISC), for the Home button option.
+    home: '<svg viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '<path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     next: '<svg viewBox="0 0 48 48"><path d="M8 10l18 14L8 38zm20 0l18 14-18 14z" fill="#fff"/></svg>',
     store: '<svg class="glyph" viewBox="0 0 48 48"><path d="M10 16h28l-2.2 24.3A4 4 0 0 1 31.8 44H16.2a4 4 0 0 1-4-3.7z" fill="none" stroke="#fff" stroke-width="3.2" stroke-linejoin="round"/>' +
       '<path d="M17 20v-6a7 7 0 0 1 14 0v6M24 25v11M18.5 30.5h11" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/></svg>'
@@ -239,6 +242,24 @@
     return pick;
   }
 
+  // MARK: - Home button
+
+  // Samsung keeps the Home button to itself: no app gets its key. Pressed over Dusk TV, the Home bar takes the remote
+  // (the page blurs but stays visible), and with this option on Dusk TV comes back to the front, which closes the bar.
+  // A blur right after Dusk TV opens an app or a screen (or hides itself) is its own doing, so it's left alone. Arrow
+  // keys don't count: a Home pressed right after moving must still bring Dusk TV back.
+  var HOME_NAMES = {'true': 'Volta para o Dusk TV', 'false': 'Abre a barra da Samsung'};
+  var leaving = 0;
+
+  function homeChoice() { return load(KEY_HOME, false) === true; }
+
+  function onBlur() {
+    if (!homeChoice() || Date.now() - leaving < 3000) return;
+    setTimeout(function () {
+      if (!document.hidden && !document.hasFocus()) TV.front();
+    }, 300);
+  }
+
   // MARK: - Network and notifications
 
   function refreshNet() {
@@ -410,6 +431,14 @@
       rotate();
       toast('Trocando a paisagem…');
     }));
+    var homeKey = card(SVG.home, 'Botão Home', HOME_NAMES[homeChoice()] + ' · OK para trocar', null);
+    homeKey.onAction = function () {
+      var on = !homeChoice();
+      save(KEY_HOME, on);
+      $('.s', homeKey).textContent = HOME_NAMES[on] + ' · OK para trocar';
+      toast(on ? 'Home no Dusk TV volta para o Dusk TV' : 'Home abre a barra da Samsung');
+    };
+    personal.appendChild(homeKey);
     personal.appendChild(card(SVG.reset, 'Restaurar favoritos', 'Volta à lista inicial', function () {
       favs = defaultFavs();
       save(KEY_FAVS, favs);
@@ -614,6 +643,7 @@
 
   function activate(el) {
     if (!el) return;
+    leaving = Date.now();
     if (el.classList.contains('tab')) { show(el.getAttribute('data-view')); move(0, 1); return; }
     if (el.id === 'bell') { openNotifications(); return; }
     if (el.onAction) { el.onAction(); return; }
@@ -710,7 +740,7 @@
     else if (k === keys.back || k === 27 || k === 8) {
       e.preventDefault();
       if (view !== 'home') { show('home'); focus($('#favs .tile') || $('.tab')); }
-      else if (focused && focused.closest('#top')) TV.back();
+      else if (focused && focused.closest('#top')) { leaving = Date.now(); TV.back(); }
       else focus($('.tab.current'));
       return;
     } else return;
@@ -778,6 +808,7 @@
     }, 1500);
     document.addEventListener('keydown', onKey);
     document.addEventListener('keyup', onKeyUp);
+    window.addEventListener('blur', onBlur);
     // Mouse in a desktop browser (the preview): click opens, hover moves the focus.
     document.addEventListener('click', function (e) {
       var el = e.target.closest('[data-f]');

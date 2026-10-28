@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.5.0] - 2026-10-28
+
+### Novo
+- **Cartão "Botão Home"** em Ajustes → Personalizar. Cada OK alterna entre:
+  - **"Abre a barra da Samsung"**: o padrão, que é o comportamento normal da TV.
+  - **"Volta para o Dusk TV"**: o Home, apertado com o Dusk aberto, traz o Dusk de volta.
+- Como funciona: a Samsung não entrega a tecla Home a nenhum app. Quando a barra dela abre por cima do Dusk, a página
+  perde o foco do controle. O Dusk percebe isso e se abre de novo, o que fecha a barra e recarrega o Início em cerca de
+  2 s. Nos 3 segundos depois de o próprio Dusk abrir um app ou uma tela, isso é ignorado, para não atrapalhar.
+- Limite: dentro de outro app (YouTube, TV ao vivo), a TV não avisa o Dusk, e o Home continua abrindo a barra da
+  Samsung. Testado numa UN60AU8000.
+
 ## [1.4.1] - 2026-10-28
 
 ### Corrigido

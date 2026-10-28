@@ -7,7 +7,7 @@
 Paisagens que mudam sozinhas, seus apps com os logos de verdade, relógio, Wi-Fi e notificações. Sem propaganda,
 sem fileiras patrocinadas.
 
-![Versão](https://img.shields.io/badge/versão-1.4.1-8CB2F3?style=for-the-badge)
+![Versão](https://img.shields.io/badge/versão-1.5.0-8CB2F3?style=for-the-badge)
 ![Samsung Tizen](https://img.shields.io/badge/Samsung-Tizen%203.0%2B-1428A0?style=for-the-badge&logo=samsung&logoColor=white)
 ![Testado em](https://img.shields.io/badge/feito%20para-UN60AU8000%20(2021)-0F172A?style=for-the-badge)
 ![Licença MIT](https://img.shields.io/badge/licença-MIT-2EA44F?style=for-the-badge)
@@ -99,9 +99,11 @@ notificações. Por enquanto, o sino abre os Ajustes da TV (veja [Notificações
   [em investigação](#-notificações-em-investigação).
 - 🎮 **Ajustes de jogo:** o painel de jogos da Samsung, com controladores, saída de som e imagem de jogo, a um clique.
 - 🔌 **Entradas HDMI** com status de conexão.
+- 🏠 **Botão Home opcional:** em Ajustes → Personalizar, você escolhe se o Home, com o Dusk aberto, volta para o Dusk
+  ou abre a barra da Samsung.
 - ⚙️ **Identidade visual** num só arquivo: logo, cor de destaque, tipo de fundo e favoritos iniciais.
 - 🪶 **Leve e rápido:** JavaScript puro, sem frameworks, sem sombras e sem blur. Os favoritos aparecem em cerca de 0,5 s, e a navegação roda a 60 quadros por segundo, medido numa UN60AU8000.
-- ↩️ **Reversível:** não mexe no sistema da TV, no botão Home nem no Smart Hub.
+- ↩️ **Reversível:** não mexe no sistema da TV nem no Smart Hub.
 
 ---
 
@@ -268,7 +270,9 @@ mas nada aparece. É um app interno da Samsung, que não aceita os pedidos padr�
 Enquanto isso, o sino e o cartão "Notificações" abrem os **Ajustes da TV**. Seguimos procurando uma solução. Se você
 souber como abrir esse painel no Tizen, ou se funcionar no seu modelo, abra uma [issue](../../issues) ou um Pull
 Request.
-- **Botão Home:** continua abrindo o Smart Hub. Por segurança, ele não é remapeado.
+- **Botão Home:** a Samsung não entrega essa tecla a nenhum app. Com a opção "Botão Home" ligada, o Dusk percebe
+  quando a barra da Samsung abre por cima dele e volta para a frente, recarregando no Início em cerca de 2 s. Dentro
+  de outro app (YouTube, TV ao vivo), a TV não avisa o Dusk, e o Home continua abrindo a barra da Samsung.
 - **Modo Desenvolvedor:** precisa continuar ligado para o app funcionar.
 
 ---

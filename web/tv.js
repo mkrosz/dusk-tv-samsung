@@ -692,6 +692,18 @@ var TV = (function () {
       if (window.PalmSystem && window.PalmSystem.platformBack) window.PalmSystem.platformBack();
     },
 
+    /**
+     * Brings this app back in front (Samsung). Over Dusk TV, the Home button's bar takes the remote without hiding the
+     * page; opening ourselves again closes the bar. Samsung tells no app about Home pressed inside another app.
+     */
+    front: function () {
+      if (!samsung) return;
+      try {
+        var A = window.tizen.application;
+        A.launch(A.getCurrentApplication().appInfo.id, function () {}, function () {});
+      } catch (e) {}
+    },
+
     /** The TV's time zone ("America/Sao_Paulo"), or ''. */
     zone: function () {
       if (samsung) {
