@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.5.1] - 2026-10-28
+
+### Corrigido (documentação)
+- **O README não promete mais que a TV liga direto no Dusk TV.** Na UN60AU8000, o "Executar automaticamente último
+  app" não abre o Dusk ao ligar, e a TV vai para a TV ao vivo. Foram quatro testes, desligando e ligando a TV:
+  - com o app aberto pela barra da Samsung e pelo computador;
+  - com o aviso `appbootingsupport`, que Netflix, YouTube e Prime Video têm;
+  - com a ordem de retomada `eden_resume`, como declara o TizenBrew;
+  - com `prelaunch.support`.
+- Também foi testado deixar o Dusk rodando em segundo plano para ele se abrir ao ligar, mas a TV fecha o app quando
+  desliga. Nenhuma dessas mudanças ficou no app.
+- O passo 5 da instalação agora ensina a pôr o Dusk TV no começo da barra da Samsung (Home → Dusk TV), e a seção
+  "Limites do Tizen" explica o que a TV não deixa fazer. A dica no fim do `install.py` também mudou.
+
 ## [1.5.0] - 2026-10-28
 
 ### Novo

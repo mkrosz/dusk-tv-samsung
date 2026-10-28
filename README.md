@@ -7,7 +7,7 @@
 Paisagens que mudam sozinhas, seus apps com os logos de verdade, relógio, Wi-Fi e notificações. Sem propaganda,
 sem fileiras patrocinadas.
 
-![Versão](https://img.shields.io/badge/versão-1.5.0-8CB2F3?style=for-the-badge)
+![Versão](https://img.shields.io/badge/versão-1.5.1-8CB2F3?style=for-the-badge)
 ![Samsung Tizen](https://img.shields.io/badge/Samsung-Tizen%203.0%2B-1428A0?style=for-the-badge&logo=samsung&logoColor=white)
 ![Testado em](https://img.shields.io/badge/feito%20para-UN60AU8000%20(2021)-0F172A?style=for-the-badge)
 ![Licença MIT](https://img.shields.io/badge/licença-MIT-2EA44F?style=for-the-badge)
@@ -196,14 +196,21 @@ python tizen/install.py IP_DA_TV
 Troque `IP_DA_TV` pelo IP que você anotou no passo 1 (por exemplo, `python tizen/install.py 192.168.0.20`). O
 app abre sozinho na TV no fim do último comando.
 
-**5. Na TV, faça ela já ligar no Dusk TV**
+**5. Na TV, deixe o Dusk TV a um clique**
 
 Este passo é feito **na TV, com o controle** (não no Tizen Studio):
 
-1. Aperte **Home**, vá até a engrenagem **⚙ Configurações** e entre em **Todas as configurações**.
-2. Entre em **Geral** → **Recursos Smart**.
-3. Ligue **Executar automaticamente último app** (*Autorun Last App*).
-4. Abra o Dusk TV uma vez e desligue a TV com ele aberto. Da próxima vez, ela liga direto nele.
+1. Aperte **Home** e, na barra da Samsung, vá até o **Dusk TV**.
+2. Aperte **▼** (ou segure OK) e escolha **Mover**.
+3. Leve o Dusk TV para o **começo da barra** e confirme com OK.
+
+Agora, de qualquer lugar, **Home → Dusk TV** abre a tela. Em Ajustes → Personalizar, o cartão **"Botão Home"** faz o
+Home, apertado com o Dusk aberto, voltar para o próprio Dusk.
+
+> **E o "Executar automaticamente último app"?** Na UN60AU8000, ele não abre o Dusk TV ao ligar a TV. Testamos com o
+> app aberto pela barra e pelo computador, e com os mesmos avisos que Netflix e YouTube usam para isso
+> (`appbootingsupport`, `prelaunch.support` e `eden_resume`). Em todas as vezes, a TV ligou na TV ao vivo. Tudo indica
+> que a Samsung só aplica essa função a apps da loja dela. Veja [Limites do Tizen](#-limites-do-tizen).
 
 > Mudou alguma coisa? Rode de novo só o passo 4.
 
@@ -273,6 +280,10 @@ Request.
 - **Botão Home:** a Samsung não entrega essa tecla a nenhum app. Com a opção "Botão Home" ligada, o Dusk percebe
   quando a barra da Samsung abre por cima dele e volta para a frente, recarregando no Início em cerca de 2 s. Dentro
   de outro app (YouTube, TV ao vivo), a TV não avisa o Dusk, e o Home continua abrindo a barra da Samsung.
+- **Ligar a TV direto no Dusk TV:** não funciona na UN60AU8000. O "Executar automaticamente último app" ignora apps
+  instalados pelo Modo Desenvolvedor, e a TV fecha o Dusk ao desligar, então ele não consegue se abrir sozinho.
+- **Voltar para o Dusk ao sair de um app:** a TV vai para a TV ao vivo e não avisa o Dusk quando outro app fecha.
+  Use **Home → Dusk TV**.
 - **Modo Desenvolvedor:** precisa continuar ligado para o app funcionar.
 
 ---
@@ -281,7 +292,6 @@ Request.
 
 - **Pelo computador:** `python tizen/install.py IP_DA_TV --uninstall`
 - **Pela TV:** Apps → ⚙ → Dusk TV → Excluir.
-- Desligue o "Executar automaticamente o último app" e a TV volta ao Smart Hub normal.
 
 ---
 

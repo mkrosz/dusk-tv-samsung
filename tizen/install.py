@@ -199,8 +199,7 @@ def main():
         sys.exit('The TV didn\'t finish installing. It said:\n' + out.strip() + hint)
     sdb.shell('0 was_execute ' + app_id, r'launched|spend time', 20)
     print('Installed and open on the TV.')
-    print('Tip: turn on Autorun Last App in the TV\'s settings (General, Smart Features; where it is changes by year) '
-          'and the TV turns on into Dusk TV.')
+    print('Tip: on the TV, press Home, move Dusk TV to the start of the bar, and Home then OK opens it.')
 
 
 if __name__ == '__main__':
