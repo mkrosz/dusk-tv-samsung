@@ -103,8 +103,11 @@
 
   // MARK: - Layout: scale the 1920×1080 stage to the screen
 
+  var stageScale = 1;
+
   function fit() {
     var s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    stageScale = s;
     $('#stage').style.transform = 'scale(' + s + ')';
   }
 
@@ -485,7 +488,11 @@
     scrollTo(el);
   }
 
-  // The Apps and Settings views move up so the focused row stays on screen.
+  // The Apps and Settings views move only as much as it takes to keep the focused item on screen, and never past
+  // the end of their content. Positions come from the screen (getBoundingClientRect), since offsetTop's reference
+  // changes once the scroller is transformed, which made the page jump up and down between cards of one row.
+  var VISIBLE = 1080 - 150 - 40;   // the views' content starts 150 px down; 40 px of air at the bottom
+
   function scrollTo(el) {
     // The favorites row slides sideways when it holds more than fits.
     if (el.parentNode && el.parentNode.classList.contains('row')) {
@@ -497,9 +504,18 @@
     var section = $('#' + view);
     var box = $('.scroller', section);
     if (!box) return;
-    if (el.closest('#top')) { box.style.transform = ''; return; }
-    var top = el.offsetTop, h = el.offsetHeight, limit = 1080 - 150 - 80;
-    var shift = Math.max(0, top + h - limit);
+    if (el.closest('#top')) return;   // the tabs leave the page where it is
+    var scale = stageScale || 1, shift = box.shift || 0;
+    var top = (el.getBoundingClientRect().top - box.getBoundingClientRect().top) / scale;
+    var bottom = top + el.offsetHeight + 40;   // the name under a tile
+    var max = Math.max(0, box.scrollHeight - VISIBLE);
+    if (bottom - shift > VISIBLE) shift = bottom - VISIBLE;
+    else if (top - shift < 60) shift = top - 60;   // keep the section title above in view
+    // The last row also brings up what's under it (the TV's model and version in Settings).
+    if (bottom + 120 >= box.scrollHeight) shift = max;
+    shift = Math.max(0, Math.min(shift, max));
+    if (shift === (box.shift || 0)) return;
+    box.shift = shift;
     box.style.transform = shift ? 'translateY(' + -shift + 'px)' : '';
   }
 
@@ -516,6 +532,13 @@
     if (dy > 0 && focused.closest('#top')) {
       var first = $('#' + view + ' [data-f]');
       if (first) { focus(first); return; }
+    }
+    // Up into the top bar lands on the tab of the page you're on: the nearest tab could be another one, and
+    // focusing a tab opens its page.
+    if (dy < 0 && !focused.closest('#top')) {
+      var from0 = center(focused), above = list.filter(function (el) { return el.closest('#top') || center(el).y < from0.y - 4; });
+      var inView = above.filter(function (el) { return !el.closest('#top'); });
+      if (!inView.length) { focus($('.tab.current') || $('.tab')); return; }
     }
     var from = center(focused), found = [];
     list.forEach(function (el) {

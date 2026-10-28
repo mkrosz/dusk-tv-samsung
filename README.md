@@ -7,7 +7,7 @@
 Paisagens que mudam sozinhas, seus apps com os logos de verdade, relógio, Wi-Fi e notificações. Sem propaganda,
 sem fileiras patrocinadas.
 
-![Versão](https://img.shields.io/badge/versão-1.2.0-8CB2F3?style=for-the-badge)
+![Versão](https://img.shields.io/badge/versão-1.2.1-8CB2F3?style=for-the-badge)
 ![Samsung Tizen](https://img.shields.io/badge/Samsung-Tizen%203.0%2B-1428A0?style=for-the-badge&logo=samsung&logoColor=white)
 ![Testado em](https://img.shields.io/badge/feito%20para-UN60AU8000%20(2021)-0F172A?style=for-the-badge)
 ![Licença MIT](https://img.shields.io/badge/licença-MIT-2EA44F?style=for-the-badge)

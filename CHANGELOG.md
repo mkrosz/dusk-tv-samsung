@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.2.1] - 2026-10-28
+
+### Corrigido
+- **Rolagem em Apps e Ajustes:** a página só desce o necessário para mostrar o item em foco e nunca passa do fim do
+  conteúdo. Na última fileira de Ajustes, ela desce o suficiente para mostrar o modelo da TV e a versão.
+- **Ajustes não sobe e desce mais** ao andar entre os cartões de uma mesma fileira (como os de "Sistema da TV"). A
+  posição agora é medida na tela, e não mais pelo `offsetTop`, que mudava de referência depois da primeira rolagem.
+- **Subir para a barra não troca mais de aba:** o foco vai para a aba da página onde você está. Antes ia para a aba
+  mais próxima, que podia ser "Início".
+
 ## [1.2.0] - 2026-10-28
 
 ### Navegação fluida
