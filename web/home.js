@@ -48,7 +48,9 @@
     network: '<svg viewBox="0 0 48 48"><path d="M24 38a3.2 3.2 0 1 0 0.01 0zM15.5 31.5a12 12 0 0 1 17 0l-2.8 2.8a8 8 0 0 0-11.4 0zM9.8 25.8a20 20 0 0 1 28.4 0l-2.8 2.8a16 16 0 0 0-22.8 0zM4.1 20.1a28 28 0 0 1 39.8 0l-2.8 2.8a24 24 0 0 0-34.2 0z" fill="#fff"/></svg>',
     account: '<svg viewBox="0 0 48 48"><path d="M24 6a9 9 0 1 1 0 18 9 9 0 0 1 0-18zm0 22c9 0 17 4.4 17 10v4H7v-4c0-5.6 8-10 17-10z" fill="#fff"/></svg>',
     privacy: '<svg viewBox="0 0 48 48"><path d="M24 4l16 6v11c0 10.3-6.8 19.6-16 22-9.2-2.4-16-11.7-16-22V10zm-3 26l12-12-2.8-2.8L21 24.4l-4.2-4.2L14 23z" fill="#fff"/></svg>',
-    gear: '<svg viewBox="0 0 48 48"><path d="M27.6 4l1.2 5.2a15 15 0 0 1 3.9 2.3l5.1-1.6 3.6 6.2-3.9 3.6a15 15 0 0 1 0 4.6l3.9 3.6-3.6 6.2-5.1-1.6a15 15 0 0 1-3.9 2.3L27.6 44h-7.2l-1.2-5.2a15 15 0 0 1-3.9-2.3l-5.1 1.6-3.6-6.2 3.9-3.6a15 15 0 0 1 0-4.6l-3.9-3.6 3.6-6.2 5.1 1.6a15 15 0 0 1 3.9-2.3L20.4 4zM24 17a7 7 0 1 0 0 14 7 7 0 0 0 0-14z" fill="#fff"/></svg>',
+    // An outlined gear (after Lucide's "settings", ISC), drawn like the bell.
+    gear: '<svg viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '<circle cx="12" cy="12" r="3" fill="none" stroke="#fff" stroke-width="1.9"/></svg>',
     bellcard: '<svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>' +
       '<path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     next: '<svg viewBox="0 0 48 48"><path d="M8 10l18 14L8 38zm20 0l18 14-18 14z" fill="#fff"/></svg>',
@@ -373,9 +375,19 @@
     return el;
   }
 
-  function openTvSettings(where) {
-    toast(where ? 'Abrindo Ajustes da TV → ' + where : 'Abrindo Ajustes da TV');
-    TV.settings(function (ok) { if (!ok) toast('Não deu para abrir os Ajustes da TV'); });
+  // A second OK while the TV is still opening a screen would open it twice (or the wrong one): one at a time.
+  var opening = 0;
+
+  function openTvSettings(kind, name, where) {
+    if (Date.now() - opening < 3000) return;
+    opening = Date.now();
+    toast('Abrindo ' + name + '…');
+    var finish = function (ok, direct) {
+      opening = 0;
+      if (!ok) toast('Não deu para abrir ' + name);
+      else if (!direct && where) toast('Nos Ajustes, vá em ' + where);
+    };
+    if (kind) TV.system(kind, finish); else TV.settings(function (ok) { finish(ok, true); });
   }
 
   function drawSettings() {
@@ -407,13 +419,15 @@
     // Samsung lets apps open its settings, but not a given page: the subtitle says where to go from there.
     var system = $('#settings .system');
     system.innerHTML = '';
-    system.appendChild(card(SVG.network, 'Rede e Wi-Fi', 'Geral → Rede', function () { openTvSettings('Geral → Rede'); }));
-    system.appendChild(card(SVG.account, 'Conta Samsung', 'Geral → Gerenciador do sistema → Conta Samsung',
-        function () { openTvSettings('Geral → Gerenciador do sistema → Conta Samsung'); }));
-    system.appendChild(card(SVG.privacy, 'Privacidade', 'Geral → Termos e Privacidade',
-        function () { openTvSettings('Geral → Termos e Privacidade'); }));
+    system.appendChild(card(SVG.network, 'Rede e Wi-Fi', 'Conexão, Wi-Fi e status da rede',
+        function () { openTvSettings('network', 'Rede e Wi-Fi', 'Geral → Rede'); }));
+    system.appendChild(card(SVG.account, 'Conta Samsung', 'Entrar, sair e dados da conta',
+        function () { openTvSettings('account', 'Conta Samsung', 'Geral → Gerenciador do sistema → Conta Samsung'); }));
+    system.appendChild(card(SVG.privacy, 'Privacidade', 'Termos, privacidade e anúncios',
+        function () { openTvSettings('privacy', 'Privacidade', 'Geral → Termos e Privacidade'); }));
     system.appendChild(card(SVG.bellcard, 'Notificações', 'Painel de notificações da Samsung', openNotifications));
-    system.appendChild(card(SVG.gear, 'Todos os ajustes da TV', 'Imagem, som, suporte e mais', function () { openTvSettings(''); }));
+    system.appendChild(card(SVG.gear, 'Ajustes da TV', 'Imagem, som, suporte e tudo mais',
+        function () { openTvSettings('', 'os Ajustes da TV', ''); }));
 
     if (aboutText) { $('#settings .about').textContent = aboutText; return; }
     TV.about(function (a) {

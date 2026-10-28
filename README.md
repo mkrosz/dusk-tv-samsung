@@ -7,7 +7,7 @@
 Paisagens que mudam sozinhas, seus apps com os logos de verdade, relógio, Wi-Fi e notificações. Sem propaganda,
 sem fileiras patrocinadas.
 
-![Versão](https://img.shields.io/badge/versão-1.3.0-8CB2F3?style=for-the-badge)
+![Versão](https://img.shields.io/badge/versão-1.3.1-8CB2F3?style=for-the-badge)
 ![Samsung Tizen](https://img.shields.io/badge/Samsung-Tizen%203.0%2B-1428A0?style=for-the-badge&logo=samsung&logoColor=white)
 ![Testado em](https://img.shields.io/badge/feito%20para-UN60AU8000%20(2021)-0F172A?style=for-the-badge)
 ![Licença MIT](https://img.shields.io/badge/licença-MIT-2EA44F?style=for-the-badge)
@@ -251,10 +251,9 @@ dusk-tv-samsung/
 
 ## ⚠️ Limites do Tizen
 
-- **Notificações:** a Samsung não divulga qual app abre o painel de notificações. O sino tenta os nomes conhecidos
-  e procura um app de notificações na TV. Se não achar nenhum, abre os Ajustes.
-- **Conta, Privacidade e Rede:** um app só consegue abrir os Ajustes no começo, não numa página específica. Por
-  isso cada cartão mostra o caminho a seguir lá dentro.
+- **Notificações, Rede, Conta e Privacidade:** a Samsung não documenta os apps dessas telas. O Dusk abre direto
+  os que existem na UN60AU8000 (Tizen 6). Em outros modelos, se algum não existir, ele abre os Ajustes da TV e
+  mostra o caminho a seguir lá dentro.
 - **Botão Home:** continua abrindo o Smart Hub. Por segurança, ele não é remapeado.
 - **Modo Desenvolvedor:** precisa continuar ligado para o app funcionar.
 

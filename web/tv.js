@@ -1,4 +1,4 @@
-/*
+﻿/*
  * From Free My TV (github.com/simbasjungles/free-my-tv, MIT, see LICENSE-FreeMyTV), with Dusk TV's network and
  * notification calls added.
  *
@@ -333,8 +333,13 @@ var TV = (function () {
     });
   }
 
-  /** Samsung's settings: whichever app answers the platform's "settings" request, else the TV's menu (Tizen 3). */
+  /** Samsung's settings: its settings app, else whichever app answers the platform's "settings" request, else the
+   * TV's menu (Tizen 3). */
   function samsungSettings(done) {
+    samsungFirst(SYSTEM_APPS.settings, function (ok) { if (ok) { if (done) done(true); } else settingsControl(done); });
+  }
+
+  function settingsControl(done) {
     function menu() { samsungLaunch(SAMSUNG_MENU, done); }
     try {
       var control = new window.tizen.ApplicationControl('http://tizen.org/appcontrol/operation/setting', null, null, null, []);
@@ -367,47 +372,78 @@ var TV = (function () {
     } catch (e) { finish(); }
   }
 
+  // Samsung's own settings screens, opened by app id: the generic "settings" app control took seconds on a 2021
+  // AU8000 and sometimes landed on org.tizen.menu instead. Ids from that TV (Tizen 6, `coba` apps); each list is
+  // tried in order and the first one installed opens. Unlisted TVs fall back to the app control.
+  var SYSTEM_APPS = {
+    settings: ['com.samsung.tv.coba.setting'],
+    network: ['com.samsung.tv.coba.setting.networksettings', 'org.tizen.NetworkSetting-Tizen'],
+    account: ['com.samsung.tv.coba.samsungaccount', 'com.samsung.tv.CSAccount'],
+    privacy: ['com.samsung.tv.coba.privacychoice', 'tv6pbVMQFF.PrivacyChoices'],
+    notifications: ['com.samsung.tv.notification-app']
+  };
+
+  /** Opens the first installed app of a list; done(ok, id), with ok false when none is installed or opens. */
+  function samsungFirst(ids, done) {
+    var i = 0;
+    (function next() {
+      if (i >= ids.length) { done(false, ''); return; }
+      var id = ids[i++];
+      try { window.tizen.application.getAppInfo(id); } catch (e) { next(); return; }   // not on this TV
+      samsungLaunch(id, function (ok) { if (ok) done(true, id); else next(); });
+    })();
+  }
+
   // Samsung doesn't document the app behind its notification panel, and its id changes by year. The ids seen on
   // Tizen TVs are tried first, then any installed app whose id names a notification list or center (popups aren't
   // panels). The one that opens is remembered; with none, the TV's settings open instead.
-  var NOTIFY_KEY = 'dusk.notifyApp';
-  var NOTIFY_IDS = ['com.samsung.tv.notification-center', 'org.tizen.notification-center', 'com.samsung.tv.notification',
-    'org.tizen.notification', 'com.samsung.tv.notificationcenter', 'org.tizen.tv-notification'];
+  var NOTIFY_KEY = 'dusk.notifyApp2';
+  var NOTIFY_IDS = SYSTEM_APPS.notifications.concat(['com.samsung.tv.notification-center', 'org.tizen.notification-center',
+    'com.samsung.tv.notification', 'org.tizen.notification', 'com.samsung.tv.notificationcenter', 'org.tizen.tv-notification']);
 
-  function samsungNotifyCandidates(done) {
+  /** The known ids, the last one that opened first. */
+  function samsungNotifyKnown() {
     var out = [];
     try { var saved = localStorage.getItem(NOTIFY_KEY); if (saved) out.push(saved); } catch (e) {}
     NOTIFY_IDS.forEach(function (id) { if (out.indexOf(id) < 0) out.push(id); });
+    return out;
+  }
+
+  /** Other installed apps that look like a notification panel. Listing every app took ~10 s on a 2021 AU8000, so
+   * this runs only when no known id opens. */
+  function samsungNotifyScan(done) {
+    var out = samsungNotifyKnown();
     try {
       window.tizen.application.getAppsInfo(function (list) {
         var found = [];
         for (var i = 0; i < list.length; i++) {
           var id = list[i].id || '';
-          if (/notif/i.test(id) && !/popup|syspopup|service$|daemon/i.test(id) && out.indexOf(id) < 0) found.push(id);
+          if (/notif/i.test(id) && !/popup|service|daemon/i.test(id) && out.indexOf(id) < 0) found.push(id);
         }
         // "center", "list" and "panel" first: those are the full panel, not one notice.
         found.sort(function (a, b) { return (/center|centre|list|panel/i.test(b) ? 1 : 0) - (/center|centre|list|panel/i.test(a) ? 1 : 0); });
-        done(out.concat(found));
-      }, function () { done(out); });
+        done(found);
+      }, function () { done([]); });
     } catch (e) {
-      done(out);
+      done([]);
     }
   }
 
   /** Opens Samsung's notification panel; done(ok, how) where how is the app id, or 'settings' for the fallback. */
   function samsungNotifications(done) {
-    samsungNotifyCandidates(function (ids) {
-      var i = 0;
-      (function next() {
-        if (i >= ids.length) { samsungSettings(function (ok) { if (done) done(ok, 'settings'); }); return; }
-        var id = ids[i++];
-        try { window.tizen.application.getAppInfo(id); } catch (e) { next(); return; }   // not on this TV
-        samsungLaunch(id, function (ok) {
-          if (!ok) { next(); return; }
-          try { localStorage.setItem(NOTIFY_KEY, id); } catch (e) {}
-          if (done) done(true, id);
+    function opened(ok, id) {
+      if (!ok) return false;
+      try { localStorage.setItem(NOTIFY_KEY, id); } catch (e) {}
+      if (done) done(true, id);
+      return true;
+    }
+    samsungFirst(samsungNotifyKnown(), function (ok, id) {
+      if (opened(ok, id)) return;
+      samsungNotifyScan(function (found) {
+        samsungFirst(found, function (ok2, id2) {
+          if (!opened(ok2, id2)) samsungSettings(function (ok3) { if (done) done(ok3, 'settings'); });
         });
-      })();
+      });
     });
   }
 
@@ -601,6 +637,19 @@ var TV = (function () {
         if (wired.state === 'connected') done({type: 'ethernet', bars: 4, ssid: ''});
         else if (wifi.state === 'connected') done({type: 'wifi', bars: 4, ssid: wifi.ssid || ''});
         else done({type: 'none', bars: 0, ssid: ''});
+      });
+    },
+
+    /**
+     * One of the TV's settings screens ('network', 'account', 'privacy'), opened directly; done(ok, direct) where
+     * direct is false when only the main settings could open.
+     */
+    system: function (kind, done) {
+      var self2 = this;
+      if (!samsung) { if (done) setTimeout(function () { done(true, true); }, 0); return; }
+      samsungFirst(SYSTEM_APPS[kind] || [], function (ok) {
+        if (ok) { if (done) done(true, true); return; }
+        self2.settings(function (ok2) { if (done) done(ok2, false); });
       });
     },
 

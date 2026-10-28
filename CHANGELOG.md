@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.3.1] - 2026-10-28
+
+### Corrigido
+- **As opções de "Sistema da TV" em Ajustes abrem direto, rápido e no lugar certo.** Antes, todas passavam pelo
+  pedido genérico de "abrir ajustes", que demorava, às vezes falhava e às vezes caía no menu errado
+  (`org.tizen.menu`). Agora cada cartão abre o app da própria tela (tempos medidos na UN60AU8000):
+  - Rede e Wi-Fi: `com.samsung.tv.coba.setting.networksettings`, em cerca de 0,9 s.
+  - Conta Samsung: `com.samsung.tv.coba.samsungaccount`, em cerca de 1,5 s.
+  - Privacidade: `com.samsung.tv.coba.privacychoice`, em cerca de 2,2 s.
+  - Ajustes da TV: `com.samsung.tv.coba.setting`, em cerca de 1,3 s.
+  - Em TVs sem algum desses apps, abre os Ajustes e mostra o caminho a seguir.
+- **Notificações (cartão e sino) abrem em cerca de 1 s.** Antes levavam 11 s, porque o app listava todos os apps da
+  TV antes. Agora ele tenta direto o `com.samsung.tv.notification-app` e só procura na lista se esse não existir.
+- **Um segundo OK enquanto uma tela está abrindo é ignorado.** Antes, ele podia abrir a tela duas vezes ou a tela
+  errada.
+
+### Visual
+- Novo ícone de engrenagem, em contorno, no mesmo estilo do sino.
+- "Todos os ajustes da TV" virou "Ajustes da TV", que cabe numa linha só.
+
 ## [1.3.0] - 2026-10-28
 
 ### Novo
