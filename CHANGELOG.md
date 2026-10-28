@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.9.0] - 2026-10-28
+
+### Novo
+- **Clima na barra superior**, no lugar do sino: o ícone do tempo agora (sol, lua, nuvens, chuva, garoa, trovoada,
+  neblina ou neve) e a temperatura, numa pílula no estilo das abas.
+- **Previsão ao chegar no clima**, sem apertar OK: um painel embaixo da barra com o local, a condição, a máxima e a
+  mínima do dia, a chance de chuva, a sensação, a umidade, o vento e as **próximas 6 horas**. ◀ ou ▼ saem e fecham;
+  Voltar também fecha.
+- Os dados vêm do [Open-Meteo](https://open-meteo.com), sem chave, e se atualizam a cada 30 minutos. A cidade é
+  descoberta pela internet da TV (ipinfo.io, com o geojs.io de reserva) ou fixada em `weatherCity`, no `config.js`.
+
+### Mudou
+- O sino saiu da barra. O cartão "Notificações" continua em Ajustes e abre os Ajustes da TV.
+
 ## [1.8.1] - 2026-10-28
 
 ### Visual

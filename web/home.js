@@ -38,9 +38,6 @@
     },
     nowifi: '<svg viewBox="0 0 48 48" width="34" height="34"><path d="M24 38a3.2 3.2 0 1 0 0.01 0zM4.1 20.1a28 28 0 0 1 39.8 0l-2.8 2.8a24 24 0 0 0-34.2 0z" fill="#fff" fill-opacity="0.35"/><path d="M8 6l34 34-2.8 2.8L5.2 8.8z" fill="#fff"/></svg>',
     ethernet: '<svg viewBox="0 0 48 48" width="34" height="34"><path d="M10 10h28v20h-8v6h-12v-6h-8zM15 15v10h3v-5h3v5h6v-5h3v5h3V15z" fill="#fff"/></svg>',
-    // An outlined bell (after Lucide's, ISC), lighter than a filled one.
-    bell: '<svg viewBox="0 0 24 24" width="32" height="32"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>' +
-      '<path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     live: '<svg class="glyph" viewBox="0 0 48 48"><path d="M8 14h32a3 3 0 0 1 3 3v20a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V17a3 3 0 0 1 3-3zm9-9l7 7 7-7 2 2-6 6h-6l-6-6z" fill="#fff"/></svg>',
     hdmi: '<svg class="glyph" viewBox="0 0 48 48"><path d="M6 16h36v10l-4 6H10l-4-6zm6 4v4h24v-4z" fill="#fff"/></svg>',
     picture: '<svg viewBox="0 0 48 48"><path d="M6 8h36a2 2 0 0 1 2 2v28a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2zm2 4v20l9-10 7 8 5-5 11 11V12zm26 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8z" fill="#fff"/></svg>',
@@ -48,7 +45,7 @@
     network: '<svg viewBox="0 0 48 48"><path d="M24 38a3.2 3.2 0 1 0 0.01 0zM15.5 31.5a12 12 0 0 1 17 0l-2.8 2.8a8 8 0 0 0-11.4 0zM9.8 25.8a20 20 0 0 1 28.4 0l-2.8 2.8a16 16 0 0 0-22.8 0zM4.1 20.1a28 28 0 0 1 39.8 0l-2.8 2.8a24 24 0 0 0-34.2 0z" fill="#fff"/></svg>',
     account: '<svg viewBox="0 0 48 48"><path d="M24 6a9 9 0 1 1 0 18 9 9 0 0 1 0-18zm0 22c9 0 17 4.4 17 10v4H7v-4c0-5.6 8-10 17-10z" fill="#fff"/></svg>',
     privacy: '<svg viewBox="0 0 48 48"><path d="M24 4l16 6v11c0 10.3-6.8 19.6-16 22-9.2-2.4-16-11.7-16-22V10zm-3 26l12-12-2.8-2.8L21 24.4l-4.2-4.2L14 23z" fill="#fff"/></svg>',
-    // An outlined gear (after Lucide's "settings", ISC), drawn like the bell.
+    // An outlined gear (after Lucide's "settings", ISC), drawn like the weather icons.
     gear: '<svg viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>' +
       '<circle cx="12" cy="12" r="3" fill="none" stroke="#fff" stroke-width="1.9"/></svg>',
     bellcard: '<svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>' +
@@ -124,7 +121,7 @@
   }
 
   function applyAccent() {
-    var css = '.tab.focus,#bell.focus,.cards .item.focus{border-color:' + ACCENT + '}' +
+    var css = '.tab.focus,#weather.focus,.cards .item.focus{border-color:' + ACCENT + '}' +
       '.tile.lifted:before{border-color:' + ACCENT + '}#favs.moving .hint{color:' + ACCENT + '}' +
       '.menu .opt.focus,.cards .item.asking{border-color:' + ACCENT + '}' +
       '.menu .opt.check.on:before{background:' + ACCENT + ';border-color:' + ACCENT + '}';
@@ -355,6 +352,143 @@
     return items;
   }
 
+  // MARK: - Weather (Open-Meteo, no key) where the TV is (by its internet address, or CONF.weatherCity)
+
+  // Weather icons, outlined (after Lucide's weather set, ISC); the focus styles repaint them.
+  var CLOUD_BASE = 'M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242';
+  var SKY_ICONS = {
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',
+    moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
+    cloudsun: '<path d="M12 2v2M4.93 4.93l1.41 1.41M20 12h2M19.07 4.93l-1.41 1.41M15.947 12.65a4 4 0 0 0-5.925-4.128M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z"/>',
+    cloudmoon: '<path d="M13 16a3 3 0 1 1 0 6H7a5 5 0 1 1 4.9-6ZM10.1 9A6 6 0 0 1 16 4a4.24 4.24 0 0 0 6 6 6 6 0 0 1-3 5.197"/>',
+    cloud: '<path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>',
+    fog: '<path d="' + CLOUD_BASE + 'M16 17H7M17 21H9"/>',
+    drizzle: '<path d="' + CLOUD_BASE + 'M8 19v1M8 14v1M16 19v1M16 14v1M12 21v1M12 16v1"/>',
+    rain: '<path d="' + CLOUD_BASE + 'M16 14v6M8 14v6M12 16v6"/>',
+    storm: '<path d="M6 16.326A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 .5 8.973M13 12l-3 5h4l-3 5"/>',
+    snow: '<path d="' + CLOUD_BASE + 'M8 15h.01M8 19h.01M12 17h.01M12 21h.01M16 15h.01M16 19h.01"/>'
+  };
+
+  function skyIcon(name) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">' +
+      '<g stroke="#fff">' + SKY_ICONS[name] + '</g></svg>';
+  }
+
+  // WMO weather codes, as Open-Meteo sends them: [what it is, icon by day, icon by night].
+  function skyOf(code, day) {
+    var c = code;
+    var w = c === 0 ? ['Céu limpo', 'sun', 'moon'] :
+      c === 1 ? ['Quase sem nuvens', 'cloudsun', 'cloudmoon'] :
+      c === 2 ? ['Parcialmente nublado', 'cloudsun', 'cloudmoon'] :
+      c === 3 ? ['Nublado', 'cloud'] :
+      c === 45 || c === 48 ? ['Neblina', 'fog'] :
+      c >= 51 && c <= 57 ? ['Garoa', 'drizzle'] :
+      c === 61 ? ['Chuva fraca', 'rain'] :
+      c === 63 ? ['Chuva', 'rain'] :
+      c === 65 ? ['Chuva forte', 'rain'] :
+      c === 66 || c === 67 ? ['Chuva congelante', 'rain'] :
+      c >= 71 && c <= 77 || c === 85 || c === 86 ? ['Neve', 'snow'] :
+      c >= 80 && c <= 82 ? ['Pancadas de chuva', 'rain'] :
+      c >= 95 ? ['Trovoadas', 'storm'] : ['Tempo', 'cloud'];
+    return {what: w[0], icon: !day && w[2] ? w[2] : w[1]};
+  }
+
+  var KEY_PLACE = 'dusk.place', KEY_WEATHER = 'dusk.weather';
+  var weather = load(KEY_WEATHER, null);
+
+  /** Where the TV is: {name, lat, lon}, found once a day. */
+  function findPlace(done) {
+    var place = load(KEY_PLACE, null), city = CONF.weatherCity || '';
+    if (place && place.city === city && Date.now() - place.at < 24 * 3600000) { done(place); return; }
+    function keep(name, lat, lon) {
+      place = {at: Date.now(), city: city, name: name, lat: lat, lon: lon};
+      save(KEY_PLACE, place);
+      done(place);
+    }
+    if (city) {
+      get('https://geocoding-api.open-meteo.com/v1/search?count=1&language=pt&name=' + encodeURIComponent(city), function (r) {
+        var g = r && r.results && r.results[0];
+        if (g) keep(g.name + (g.admin1 ? ', ' + g.admin1 : ''), g.latitude, g.longitude); else done(place);
+      });
+      return;
+    }
+    get('https://ipinfo.io/json', function (r) {
+      if (r && r.loc) {
+        var ll = r.loc.split(',');
+        keep(r.city + (r.region ? ', ' + r.region : ''), +ll[0], +ll[1]);
+        return;
+      }
+      get('https://get.geojs.io/v1/ip/geo.json', function (g) {
+        if (g && g.latitude) keep(g.city + (g.region ? ', ' + g.region : ''), +g.latitude, +g.longitude); else done(place);
+      });
+    });
+  }
+
+  function refreshWeather() {
+    findPlace(function (place) {
+      if (!place) { drawWeather(); return; }
+      get('https://api.open-meteo.com/v1/forecast?latitude=' + place.lat + '&longitude=' + place.lon +
+          '&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,is_day,wind_speed_10m' +
+          '&hourly=temperature_2m,weather_code,precipitation_probability,is_day' +
+          '&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=2',
+      function (r) {
+        if (r && r.current) {
+          weather = {at: Date.now(), place: place.name, data: r};
+          save(KEY_WEATHER, weather);
+        }
+        drawWeather();
+      });
+    });
+  }
+
+  function deg(t) { return Math.round(t) + '°'; }
+
+  /** The top bar's pill: the sky now and the temperature. */
+  function drawWeather() {
+    var el = $('#weather'), now = weather && weather.data.current;
+    if (!now) { el.innerHTML = skyIcon('cloud') + '<span>--°</span>'; return; }
+    el.innerHTML = skyIcon(skyOf(now.weather_code, now.is_day).icon) + '<span>' + deg(now.temperature_2m) + '</span>';
+    if ($('#sky').classList.contains('on')) drawSky();
+  }
+
+  /** The forecast panel: the place, the sky now, today's high and low, and the next 6 hours. */
+  function drawSky() {
+    var panel = $('#sky .panel');
+    if (!weather) {
+      panel.innerHTML = '<div class="place">Clima</div><div class="now"><div class="what">Sem dados do clima agora.<div class="more">' +
+        'Confira a internet da TV. ◀ ou ▼ para sair.</div></div></div>';
+      return;
+    }
+    var d = weather.data, now = d.current, sky = skyOf(now.weather_code, now.is_day), H = d.hourly;
+    var rain = d.daily.precipitation_probability_max[0];
+    var hours = '';
+    for (var i = 0, n = 0; i < H.time.length && n < 6; i++) {
+      if (H.time[i] <= now.time) continue;
+      var p = H.precipitation_probability[i];
+      hours += '<div class="hour"><div class="h">' + parseInt(H.time[i].slice(11, 13), 10) + 'h</div><div class="i">' +
+        skyIcon(skyOf(H.weather_code[i], H.is_day[i]).icon) + '</div><div class="t">' + deg(H.temperature_2m[i]) +
+        '</div><div class="r">' + (p >= 10 ? p + '%' : '') + '</div></div>';
+      n++;
+    }
+    panel.innerHTML = '<div class="place"></div><div class="now"><div class="big">' + skyIcon(sky.icon) + '</div>' +
+      '<div class="temp">' + deg(now.temperature_2m) + '</div><div><div class="what"></div><div class="more">' +
+      'Máx ' + deg(d.daily.temperature_2m_max[0]) + ' · Mín ' + deg(d.daily.temperature_2m_min[0]) +
+      (rain != null ? ' · Chuva ' + rain + '%' : '') + '<br>Sensação ' + deg(now.apparent_temperature) +
+      ' · Umidade ' + now.relative_humidity_2m + '% · Vento ' + Math.round(now.wind_speed_10m) + ' km/h</div></div></div>' +
+      '<div class="hours">' + hours + '</div><div class="foot">◀ ou ▼ para sair · Previsão: Open-Meteo · Atualizado às ' +
+      now.time.slice(11, 16) + '</div>';
+    $('.place', panel).textContent = weather.place;
+    $('.what', panel).textContent = sky.what;
+  }
+
+  function openSky() {
+    drawSky();
+    $('#sky').classList.add('on');
+    if (!weather || Date.now() - weather.at > 15 * 60000) refreshWeather();
+  }
+
+  function closeSky() { $('#sky').classList.remove('on'); }
+
   // MARK: - Network and notifications
 
   function refreshNet() {
@@ -366,7 +500,7 @@
   }
 
   // No app found yet shows Samsung's notification panel on the AU8000: three rounds of tests by eye, every
-  // candidate answered "launched" and showed nothing (see CHANGELOG 1.3.3). Until one does, the bell opens Settings.
+  // candidate answered "launched" and showed nothing (see CHANGELOG 1.3.3). Until one does, the Notifications card opens Settings.
   // TV.notifications keeps the search for when a working id turns up.
   function openNotifications() {
     openTvSettings('', 'os Ajustes da TV', '');
@@ -655,6 +789,8 @@
     if (focused) focused.classList.remove('focus');
     focused = el;
     el.classList.add('focus');
+    // The forecast opens as the focus reaches the weather and closes as it leaves.
+    if (el.id === 'weather') openSky(); else closeSky();
     if (el.classList.contains('tab')) show(el.getAttribute('data-view'));
     scrollTo(el);
   }
@@ -736,7 +872,7 @@
   function activate(el) {
     if (!el) return;
     if (el.classList.contains('tab')) { show(el.getAttribute('data-view')); move(0, 1); return; }
-    if (el.id === 'bell') { openNotifications(); return; }
+    if (el.id === 'weather') { if ($('#sky').classList.contains('on')) closeSky(); else openSky(); return; }
     if (el.onAction) { el.onAction(); return; }
     var id = el.getAttribute('data-id');
     if (!id) return;
@@ -865,6 +1001,12 @@
 
   function onKey(e) {
     var k = e.keyCode, keys = TV.keys;
+    // Back over the forecast only closes it; the arrows close it by moving the focus away.
+    if ((k === keys.back || k === 27 || k === 8) && $('#sky').classList.contains('on')) {
+      e.preventDefault();
+      closeSky();
+      return;
+    }
     if (k === keys.ok) {
       e.preventDefault();
       if (okDown) return;   // a repeat of the same press
@@ -958,7 +1100,7 @@
     } else {
       brand.textContent = CONF.brand || '';
     }
-    $('#bell').innerHTML = SVG.bell;
+    drawWeather();
     wrapScrollers();
     tick();
     show('home');
@@ -969,6 +1111,8 @@
     setTimeout(function () {
       refreshNet();
       setInterval(refreshNet, 15000);
+      refreshWeather();
+      setInterval(refreshWeather, 30 * 60000);
     }, 400);
     setTimeout(function () {
       rotate();
@@ -990,7 +1134,12 @@
     });
     // Back from an app: the TV's apps and inputs may have changed.
     document.addEventListener('visibilitychange', function () {
-      if (!document.hidden) { tick(); refreshNet(); refresh(); }
+      if (!document.hidden) {
+        tick();
+        refreshNet();
+        refresh();
+        if (!weather || Date.now() - weather.at > 30 * 60000) refreshWeather();
+      }
     });
   }
 

@@ -17,6 +17,8 @@ window.DUSK = {
   unsplashKey: '',
   // De quantos em quantos minutos a foto troca.
   rotateMinutes: 20,
+  // Cidade do clima, como 'Sorocaba'. Vazio: o Dusk descobre pela internet da TV (ipinfo.io).
+  weatherCity: '',
   // Favoritos da primeira vez (pelo nome do app, sem diferenciar maiúsculas). Depois, o que você arrumar na TV vale.
   favorites: ['Netflix', 'YouTube', 'Prime Video', 'Globoplay', 'Disney+', 'Max', 'Apple TV', 'Spotify']
 };

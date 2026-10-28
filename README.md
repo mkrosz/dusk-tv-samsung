@@ -4,10 +4,10 @@
 
 **Uma tela inicial limpa, rápida e personalizável para Smart TVs Samsung (Tizen).**
 
-Fotos que mudam sozinhas, do tipo que você escolher, seus apps com os logos de verdade, relógio, Wi-Fi e notificações. Sem propaganda,
+Fotos que mudam sozinhas, do tipo que você escolher, seus apps com os logos de verdade, relógio, Wi-Fi e clima. Sem propaganda,
 sem fileiras patrocinadas.
 
-![Versão](https://img.shields.io/badge/versão-1.8.1-8CB2F3?style=for-the-badge)
+![Versão](https://img.shields.io/badge/versão-1.9.0-8CB2F3?style=for-the-badge)
 ![Samsung Tizen](https://img.shields.io/badge/Samsung-Tizen%203.0%2B-1428A0?style=for-the-badge&logo=samsung&logoColor=white)
 ![Testado em](https://img.shields.io/badge/feito%20para-UN60AU8000%20(2021)-0F172A?style=for-the-badge)
 ![Licença MIT](https://img.shields.io/badge/licença-MIT-2EA44F?style=for-the-badge)
@@ -79,10 +79,11 @@ Wi-Fi, Conta Samsung, Privacidade, **Ajustes de jogo** (controladores, saída de
 <img src="docs/screenshots/ajustes.png" alt="Aba de ajustes" width="100%">
 
 ### Barra superior
-Logo da Samsung, abas, relógio, força do sinal do **Wi-Fi** (ou o ícone de cabo de rede) e o **sino** de
-notificações. Por enquanto, o sino abre os Ajustes da TV (veja [Notificações: em investigação](#-notificações-em-investigação)).
+Logo da Samsung, abas, relógio, força do sinal do **Wi-Fi** (ou o ícone de cabo de rede) e o **clima**: o ícone
+do tempo e a temperatura. Ao chegar nele, abre a previsão com o local, a máxima e a mínima, a chance de chuva, a
+sensação, a umidade, o vento e as próximas 6 horas; ◀ ou ▼ fecham.
 
-<img src="docs/screenshots/topo.png" alt="Barra superior com relógio, Wi-Fi e notificações" width="100%">
+<img src="docs/screenshots/topo.png" alt="Barra superior com relógio e Wi-Fi" width="100%">
 
 ---
 
@@ -99,7 +100,10 @@ notificações. Por enquanto, o sino abre os Ajustes da TV (veja [Notificações
 - ⭐ **Favoritos editáveis pelo controle:** adicionar, tirar e reorganizar. Na aba Apps, eles ficam numa seção separada.
 - 🛍️ **Loja de apps** da Samsung a um clique, na aba Apps.
 - 📶 **Status da rede** em tempo real: força do Wi-Fi ou cabo.
-- 🔔 **Sino de notificações:** por enquanto abre os Ajustes da TV. O painel de notificações da Samsung ainda está
+- 🌤️ **Clima na barra:** temperatura e ícone do tempo agora. Ao passar por ele, abre a previsão do dia e das
+  próximas 6 horas. Vem do [Open-Meteo](https://open-meteo.com), sem chave, para a cidade da sua internet (ou a que
+  você fixar no `config.js`).
+- 🔔 **Notificações:** o cartão em Ajustes abre os Ajustes da TV. O painel de notificações da Samsung ainda está
   [em investigação](#-notificações-em-investigação).
 - 🎮 **Ajustes de jogo:** o painel de jogos da Samsung, com controladores, saída de som e imagem de jogo, a um clique.
 - 🔌 **Entradas HDMI** com status de conexão.
@@ -129,6 +133,7 @@ notificações. Por enquanto, o sino abre os Ajustes da TV (veja [Notificações
 | Interface | HTML5, CSS3 e JavaScript **ES5** (o navegador das TVs Tizen é antigo), fonte [Inter](https://rsms.me/inter/) |
 | Integração com a TV | APIs web do Tizen: `tizen.application` (apps), `tizen.systeminfo` (Wi-Fi e rede), `tizen.tvwindow` (HDMI) |
 | Fotos online | [API do Unsplash](https://unsplash.com/developers) (tópicos de fotos, chave gratuita) ou o arquivo de imagens do dia do Bing (`HPImageArchive`), sem chave |
+| Clima | [Open-Meteo](https://open-meteo.com) (previsão, sem chave) e [ipinfo.io](https://ipinfo.io) para achar a cidade pela internet |
 | Empacotamento | Python 3 (`tizen/build.py`) e o `tizen package` do Tizen SDK 10 (antigo Tizen Studio) para assinar |
 | Instalação | Python 3 (`tizen/install.py`), que fala o protocolo SDB da TV direto, sem precisar do `sdb` |
 | Base | Camada de TV do [Free My TV](https://github.com/simbasjungles/free-my-tv) (MIT) |
@@ -230,6 +235,7 @@ window.DUSK = {
   wallTypes: ['paisagens'],    // tipos da primeira vez: 'paisagens', 'animais', 'arquitetura', 'abstratos'
   unsplashKey: '',             // fica vazio aqui: a chave vai no config.local.js (veja abaixo)
   rotateMinutes: 20,           // de quantos em quantos minutos a foto troca
+  weatherCity: '',             // cidade do clima; vazio: descobre pela internet da TV
   favorites: ['Netflix', 'YouTube', 'Prime Video', 'Globoplay', 'Disney+', 'Max', 'Apple TV', 'Spotify']
 };
 ```
@@ -266,7 +272,7 @@ chave nova. Sem chave, ou se o Unsplash não responder, as fotos vêm do Bing.
 dusk-tv-samsung/
 ├── web/                  # o app (o que vai para a TV)
 │   ├── index.html
-│   ├── home.js           # telas, foco, favoritos, fotos de fundo
+│   ├── home.js           # telas, foco, favoritos, fotos de fundo, clima
 │   ├── home.css          # visual
 │   ├── tv.js             # ponte com a TV: apps, HDMI, Wi-Fi, notificações
 │   ├── config.js         # sua identidade visual
@@ -295,7 +301,7 @@ alguém olhando a TV: os apps `com.samsung.tv.notification-app`, `com.samsung.tv
 `com.samsung.tv.coba.home-notification`, chamados direto, por *app control* e em sequência. A TV responde que abriu,
 mas nada aparece. É um app interno da Samsung, que não aceita os pedidos padrão de um app de terceiros.
 
-Enquanto isso, o sino e o cartão "Notificações" abrem os **Ajustes da TV**. Seguimos procurando uma solução. Se você
+Enquanto isso, o cartão "Notificações" abre os **Ajustes da TV**. Seguimos procurando uma solução. Se você
 souber como abrir esse painel no Tizen, ou se funcionar no seu modelo, abra uma [issue](../../issues) ou um Pull
 Request.
 - **Botão Home:** continua abrindo a barra da Samsung. A Samsung não entrega essa tecla a nenhum app.
@@ -336,6 +342,8 @@ Ideias abertas: novos temas, mais logos, suporte testado em outros modelos e tel
 - **Logos:** [Simple Icons](https://simpleicons.org) (CC0) e Wikimedia Commons. Detalhes em
   [`web/logos/FONTES.txt`](web/logos/FONTES.txt).
 - **Fonte:** [Inter](https://rsms.me/inter/) (SIL Open Font License).
+- **Clima:** previsão do [Open-Meteo](https://open-meteo.com) (CC BY 4.0) e ícones do
+  [Lucide](https://lucide.dev) (ISC).
 - **Fotos online:** [Unsplash](https://unsplash.com), com o nome de cada fotógrafo na legenda, e imagens do dia do
   [Bing](https://www.bing.com). As duas são exibidas direto da fonte e não ficam guardadas neste repositório.
 

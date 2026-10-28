@@ -37,11 +37,14 @@ body.view-apps #bg .shade, body.view-settings #bg .shade { background: rgba(5, 6
 #status { flex: 1; display: flex; align-items: center; justify-content: flex-end; }
 #clock { font-size: 28px; font-weight: 600; font-variant-numeric: tabular-nums; margin-right: 26px; }
 #net { width: 34px; height: 34px; margin-right: 22px; opacity: 0.95; }
-#net svg, #bell svg { width: 100%; height: 100%; display: block; }
-#bell { width: 56px; height: 56px; padding: 10px; box-sizing: border-box; border-radius: 28px; background: rgba(255, 255, 255, 0.16);
+#net svg { width: 100%; height: 100%; display: block; }
+/* The weather: an icon and the temperature in a pill like the tabs'; OK opens the forecast. */
+#weather { height: 56px; padding: 0 20px 0 14px; box-sizing: border-box; display: flex; align-items: center; border-radius: 28px;
+  font-size: 24px; font-weight: 600; font-variant-numeric: tabular-nums; background: rgba(255, 255, 255, 0.16);
   border: 3px solid rgba(255, 255, 255, 0.12); }
-#bell.focus { background: #fff; border-color: #8CB2F3; }
-#bell.focus svg * { stroke: #14162A; }
+#weather svg { width: 32px; height: 32px; margin-right: 10px; display: block; }
+#weather.focus { background: #fff; color: #14162A; border-color: #8CB2F3; }
+#weather.focus svg [stroke] { stroke: #14162A; }
 
 /* MARK: views */
 .view { position: absolute; left: 0; top: 0; width: 100%; height: 100%; visibility: hidden; }
@@ -78,7 +81,7 @@ body.view-apps #bg .shade, body.view-settings #bg .shade { background: rgba(5, 6
 .tile .name { margin-top: 16px; font-size: 19px; font-weight: 500; opacity: 0.88; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tile .dot { position: absolute; right: 14px; top: 14px; width: 14px; height: 14px; border-radius: 7px; background: #8E92A8; }
 .tile .dot.on { background: #34D27B; }
-/* The favorite badge: a small yellow star on a translucent dark circle, like the bell; it reads on white and dark cards. */
+/* The favorite badge: a small yellow star on a translucent dark circle; it reads on white and dark cards. */
 .tile .star { position: absolute; left: 12px; top: 12px; width: 34px; height: 34px; box-sizing: border-box; padding: 8px;
   border-radius: 17px; background: rgba(12, 14, 30, 0.6); }
 .tile .star svg { width: 100%; height: 100%; display: block; }
@@ -141,6 +144,26 @@ body.view-apps #bg .shade, body.view-settings #bg .shade { background: rgba(5, 6
 #credit { position: absolute; right: 112px; bottom: 34px; max-width: 900px; font-size: 15px; opacity: 0.7; text-align: right;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6); }
 body.view-apps #credit, body.view-settings #credit { visibility: hidden; }
+
+/* MARK: forecast (OK on the weather): a panel under the top bar, drawn like the menus, over a dimmed screen */
+#sky { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: rgba(5, 6, 18, 0.62); z-index: 8; visibility: hidden; }
+#sky.on { visibility: visible; }
+#sky .panel { position: absolute; right: 96px; top: 128px; width: 820px; box-sizing: border-box; padding: 36px 44px 30px; border-radius: 30px;
+  background: linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16)), #15172A; border: 1px solid rgba(255, 255, 255, 0.18); }
+#sky svg { display: block; width: 100%; height: 100%; }
+#sky .place { font-size: 16px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; opacity: 0.8; }
+#sky .now { display: flex; align-items: center; margin: 22px 0 30px; }
+#sky .now .big { width: 104px; height: 104px; flex: none; }
+#sky .now .temp { font-size: 100px; font-weight: 700; letter-spacing: -3px; line-height: 1; margin: 0 30px 0 22px; }
+#sky .now .what { font-size: 30px; font-weight: 600; }
+#sky .now .more { font-size: 19px; opacity: 0.8; margin-top: 10px; line-height: 1.45; }
+#sky .hours { display: flex; padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.16); }
+#sky .hour { flex: 1; text-align: center; }
+#sky .hour .h { font-size: 18px; opacity: 0.75; }
+#sky .hour .i { width: 44px; height: 44px; margin: 12px auto; }
+#sky .hour .t { font-size: 24px; font-weight: 600; }
+#sky .hour .r { font-size: 16px; color: #8CB2F3; margin-top: 6px; min-height: 20px; }
+#sky .foot { font-size: 15px; opacity: 0.6; margin-top: 24px; }
 
 /* MARK: toast */
 #toast { position: absolute; left: 50%; bottom: 56px; transform: translate(-50%, 30px); padding: 18px 30px; border-radius: 30px; font-size: 22px;
